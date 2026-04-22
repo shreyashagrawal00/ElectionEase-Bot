@@ -70,3 +70,28 @@ exports.updateProgress = async (req, res) => {
     res.status(500).send('Server Error');
   }
 };
+
+exports.toggleSavedCandidate = async (req, res) => {
+  try {
+    const { candidate } = req.body; // candidate contains name, party, bio, platform, electionId
+    let user = await User.findById(req.user.id);
+    
+    const existingIndex = user.savedCandidates.findIndex(
+      c => c.name === candidate.name && c.party === candidate.party
+    );
+
+    if (existingIndex > -1) {
+      // Remove if exists
+      user.savedCandidates.splice(existingIndex, 1);
+    } else {
+      // Add if not exists
+      user.savedCandidates.push(candidate);
+    }
+
+    await user.save();
+    res.json(user.savedCandidates);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Server Error');
+  }
+};

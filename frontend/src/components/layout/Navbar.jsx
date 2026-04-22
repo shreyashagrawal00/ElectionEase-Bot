@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import logo from '../../assets/logo.png';
 import { useAuth } from '../../context/AuthContext';
 import { useAccessibility } from '../../context/AccessibilityContext';
-import { Settings, Info, LogOut, Globe } from 'lucide-react';
+import { Settings, Info, LogOut, Globe, Users } from 'lucide-react';
 import Button from '../ui/Button';
 import { useTranslation } from 'react-i18next';
 
@@ -59,6 +59,9 @@ const Navbar = () => {
             {user ? (
               <>
                 <Link to="/dashboard" className="text-slate-700 hover:text-primary-600 font-medium hidden xs:block">Dashboard</Link>
+                <Link to="/candidates" className="text-slate-700 hover:text-primary-600 font-medium hidden xs:block flex items-center">
+                  <span>Candidates</span>
+                </Link>
                 <Button variant="outline" onClick={logout} className="flex items-center text-sm px-3 py-1">
                   <LogOut className="h-4 w-4 mr-1 lg:mr-2" /> 
                   <span className="hidden lg:inline">{t('logout')}</span>

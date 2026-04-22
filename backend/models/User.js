@@ -14,7 +14,18 @@ const UserSchema = new mongoose.Schema({
     registrationCompleted: { type: Boolean, default: false },
     candidatesResearched: { type: Boolean, default: false },
     voted: { type: Boolean, default: false }
-  }
+  },
+  savedCandidates: [{
+    name: { type: String },
+    party: { type: String },
+    bio: {
+      en: { type: String },
+      hi: { type: String },
+      mr: { type: String }
+    },
+    platform: [String],
+    electionId: { type: String }
+  }]
 }, { timestamps: true });
 
 UserSchema.pre('save', async function() {

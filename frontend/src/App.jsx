@@ -9,6 +9,7 @@ import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import KnowledgeBase from './pages/KnowledgeBase';
 import ElectionTimeline from './pages/ElectionTimeline';
+import Candidates from './pages/Candidates';
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/knowledge" element={<KnowledgeBase />} />
                 <Route path="/timeline/:id" element={<ElectionTimeline />} />
+                <Route path="/candidates" element={<Candidates />} />
               </Routes>
             </main>
             <Chatbot /> {/* Added Chatbot here */}

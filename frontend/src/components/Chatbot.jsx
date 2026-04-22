@@ -11,6 +11,8 @@ const Chatbot = () => {
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [location, setLocation] = useState(null);
+  const [locationError, setLocationError] = useState(null);
   const scrollRef = useRef(null);
 
   useEffect(() => {
@@ -18,6 +20,30 @@ const Chatbot = () => {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
   }, [messages]);
+
+  const requestLocation = () => {
+    if ("geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          setLocation({ latitude, longitude });
+          setLocationError(null);
+        },
+        (error) => {
+          console.error("Error getting location:", error);
+          setLocationError("Location access denied. Some local features might be limited.");
+        }
+      );
+    } else {
+      setLocationError("Geolocation is not supported by your browser.");
+    }
+  };
+
+  useEffect(() => {
+    if (isOpen && !location && !locationError) {
+      requestLocation();
+    }
+  }, [isOpen]);
 
   const quickQuestions = [
     "How do I register to vote?",
@@ -37,7 +63,10 @@ const Chatbot = () => {
     try {
       const res = await axios.post('http://127.0.0.1:5000/api/chat', { 
         message: text,
-        context: { language: i18n.language }
+        context: { 
+          language: i18n.language,
+          location: location 
+        }
       });
       
       const assistantMessage = { role: 'assistant', content: res.data.response };

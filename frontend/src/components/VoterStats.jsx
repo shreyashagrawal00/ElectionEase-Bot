@@ -12,7 +12,7 @@ const VoterStats = () => {
   ];
 
   return (
-    <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4 mb-12">
+    <div className="grid gap-4 sm:grid-cols-2">
       {stats.map((stat, idx) => {
         const Icon = stat.icon;
         return (

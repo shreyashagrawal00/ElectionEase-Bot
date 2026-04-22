@@ -49,7 +49,15 @@ const resources = {
       "election_stages": "Election Stages",
       "polling_station_info": "Polling Station Highlights",
       "candidate_platforms": "Candidate Platforms",
-      "no_election_data": "Election data not found."
+      "no_election_data": "Election data not found.",
+      "candidate_center_title": "Candidate Research Center",
+      "candidate_center_subtitle": "Explore candidates' platforms and records objectively.",
+      "search_candidates": "Search by name or party...",
+      "filter_party": "Filter by Party",
+      "no_candidates": "No candidates found matching your criteria.",
+      "view_platform": "Platform Highlights",
+      "party": "Party",
+      "bio": "Biography"
     }
   },
   hi: {
@@ -98,7 +106,15 @@ const resources = {
       "election_stages": "चुनाव के चरण",
       "polling_station_info": "मतदान केंद्र की झलकियां",
       "candidate_platforms": "उम्मीदवारों की नीतियां",
-      "no_election_data": "चुनाव डेटा नहीं मिला।"
+      "no_election_data": "चुनाव डेटा नहीं मिला।",
+      "candidate_center_title": "उम्मीदवार अनुसंधान केंद्र",
+      "candidate_center_subtitle": "उम्मीदवारों की नीतियों और रिकॉर्ड का निष्पक्षता से पता लगाएं।",
+      "search_candidates": "नाम या पार्टी से खोजें...",
+      "filter_party": "पार्टी द्वारा फ़िल्टर करें",
+      "no_candidates": "आपके मानदंड से मेल खाने वाला कोई उम्मीदवार नहीं मिला।",
+      "view_platform": "नीति की मुख्य विशेषताएं",
+      "party": "पार्टी",
+      "bio": "जीवनी"
     }
   },
   mr: {
@@ -147,7 +163,15 @@ const resources = {
       "election_stages": "निवडणुकीचे टप्पे",
       "polling_station_info": "मतदान केंद्राची वैशिष्ट्ये",
       "candidate_platforms": "उमेदवारांची धोरणे",
-      "no_election_data": "निवडणूक डेटा सापडला नाही."
+      "no_election_data": "निवडणूक डेटा सापडला नाही.",
+      "candidate_center_title": "उमेदवार संशोधन केंद्र",
+      "candidate_center_subtitle": "उमेदवारांची धोरणे आणि रेकॉर्डचा निष्पक्षपणे शोध घ्या.",
+      "search_candidates": "नाव किंवा पक्षाद्वारे शोधा...",
+      "filter_party": "पक्षानुसार फिल्टर करा",
+      "no_candidates": "तुमच्या निकषांशी जुळणारा कोणताही उमेदवार सापडला नाही.",
+      "view_platform": "धोरणाची ठळक वैशिष्ट्ये",
+      "party": "पक्ष",
+      "bio": "चरित्र"
     }
   }
 };

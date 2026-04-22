@@ -10,6 +10,7 @@ import { motion } from 'framer-motion';
 
 import NewsSection from '../components/NewsSection';
 import VoterStats from '../components/VoterStats';
+import IndiaMap from '../components/ui/IndiaMap';
 
 const Dashboard = () => {
   const { user, loading, updateProgress } = useAuth();
@@ -93,35 +94,100 @@ const Dashboard = () => {
 
       <VoterStats />
 
-      {/* Location Filter */}
-      <Card className="p-4 mb-8 bg-white border-slate-200">
-        <div className="flex items-center mb-3 text-slate-700 font-semibold">
-          <Filter className="w-4 h-4 mr-2" />
-          <span>{t('select_state')}</span>
+      {/* Interactive Map & Context Section */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16 items-start">
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5 }}
+          className="glass-card p-2 rounded-[2.5rem] bg-white/40 backdrop-blur-md border-white/50 shadow-2xl overflow-hidden"
+        >
+          <div className="p-8 flex items-center justify-between border-b border-slate-200/50 mb-2">
+              <div>
+                  <h2 className="text-2xl font-black text-slate-800 tracking-tight">{t('select_state')}</h2>
+                  <p className="text-[10px] text-slate-400 font-bold uppercase tracking-[0.2em] mt-1">Geospatial Election Center</p>
+              </div>
+              <motion.div 
+                key={selectedState}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className={`px-6 py-2 rounded-2xl text-sm font-bold border transition-all duration-500 shadow-sm ${selectedState ? 'bg-primary-600 border-primary-700 text-white shadow-primary-200' : 'bg-white border-slate-200 text-slate-500'}`}
+              >
+                  {selectedState ? (
+                    <span className="flex items-center">
+                       <MapPin className="w-4 h-4 mr-2" />
+                       {selectedState}
+                    </span>
+                  ) : (
+                    "All Regions"
+                  )}
+              </motion.div>
+          </div>
+          <IndiaMap selectedState={selectedState} onSelectState={setSelectedState} />
+          
+          <div className="p-6 bg-slate-50/50 border-t border-slate-200/50">
+             <div className="flex flex-wrap gap-3">
+                {['Maharashtra', 'Uttar Pradesh', 'Delhi', 'Karnataka'].map(s => (
+                  <button
+                    key={s}
+                    onClick={() => setSelectedState(s)}
+                    className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${selectedState === s ? 'bg-primary-600 text-white shadow-lg' : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'}`}
+                  >
+                    {s}
+                  </button>
+                ))}
+                <button
+                  onClick={() => setSelectedState('')}
+                  className={`px-4 py-2 rounded-xl text-xs font-bold border ${!selectedState ? 'bg-slate-200 text-slate-800 border-slate-300' : 'bg-transparent text-slate-400 border-slate-200'}`}
+                >
+                  Clear Filter
+                </button>
+             </div>
+          </div>
+        </motion.div>
+
+        <div className="flex flex-col gap-8 h-full justify-between">
+           <VoterStats />
+           {/* Step Progress Summary Card */}
+           <Card className="p-8 bg-slate-900 border-slate-800 text-white rounded-[2rem] shadow-2xl relative overflow-hidden group">
+              <div className="absolute -top-24 -right-24 w-64 h-64 bg-primary-500/20 rounded-full blur-3xl group-hover:bg-primary-500/30 transition-all duration-700"></div>
+              <div className="relative z-10">
+                <h4 className="text-slate-400 text-xs font-black uppercase tracking-[0.2em] mb-4">Preparation Roadmap</h4>
+                <p className="text-xl font-medium leading-relaxed mb-6">
+                  {selectedState ? `Analyzing election readiness for ${selectedState}.` : "You're 67% towards becoming an informed voter."}
+                </p>
+                <div className="flex items-center justify-between">
+                  <div className="flex -space-x-2">
+                    {[1, 2, 3].map(i => (
+                      <div key={i} className={`w-10 h-10 rounded-full border-2 border-slate-900 flex items-center justify-center font-bold text-xs ${i <= completedCount ? 'bg-primary-500 text-white' : 'bg-slate-800 text-slate-500'}`}>
+                        {i}
+                      </div>
+                    ))}
+                  </div>
+                  <Button variant="ghost" className="text-primary-400 font-bold hover:text-primary-300" onClick={() => navigate('/knowledge')}>
+                    Full Guide →
+                  </Button>
+                </div>
+              </div>
+           </Card>
+           
+           {/* Search/Discovery Tooltip */}
+           <div className="p-6 bg-primary-50/50 rounded-[2rem] border border-primary-100/50">
+              <div className="flex items-start space-x-4">
+                <div className="p-3 bg-white rounded-2xl shadow-sm">
+                   <Search className="w-6 h-6 text-primary-600" />
+                </div>
+                <div>
+                   <h5 className="font-bold text-slate-800">Research Candidates</h5>
+                   <p className="text-sm text-slate-500 mt-1">Deep dive into candidate backgrounds, wealth declarations, and previous criminal records.</p>
+                   <Button onClick={() => navigate('/candidates')} className="mt-4 px-6 py-2 rounded-xl text-xs" variant="outline">
+                      Open Research Center
+                   </Button>
+                </div>
+              </div>
+           </div>
         </div>
-        <div className="flex flex-wrap gap-4">
-          <select 
-            value={selectedState} 
-            onChange={(e) => setSelectedState(e.target.value)}
-            className="p-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-primary-500 outline-none"
-          >
-            <option value="">{t('all_states')}</option>
-            {states.map(s => <option key={s} value={s}>{s}</option>)}
-          </select>
-          {selectedState === 'Maharashtra' && (
-            <select 
-              value={selectedDistrict} 
-              onChange={(e) => setSelectedDistrict(e.target.value)}
-              className="p-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-primary-500 outline-none"
-            >
-              <option value="">All Districts</option>
-              <option value="Mumbai">Mumbai</option>
-              <option value="Pune">Pune</option>
-              <option value="Nagpur">Nagpur</option>
-            </select>
-          )}
-        </div>
-      </Card>
+      </div>
       
       <div className="grid gap-6 md:grid-cols-3">
         {steps.map((step, idx) => {
@@ -176,7 +242,9 @@ const Dashboard = () => {
         )}
       </div>
 
-      <NewsSection stateFilter={selectedState} />
+      <div className="mt-24">
+        <NewsSection stateFilter={selectedState} />
+      </div>
     </div>
   );
 };

@@ -11,18 +11,26 @@ exports.getChatResponse = async (req, res) => {
 
   try {
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash-latest" });
 
-    const { language } = context || { language: 'en' };
+    const { language, location } = context || { language: 'en' };
+    const locationInfo = location 
+      ? `The user is located at coordinates: Latitude ${location.latitude}, Longitude ${location.longitude}. Use this to provide local information if relevant (e.g., proximity to booths or regional candidate info).`
+      : "User location is not available.";
+
     const systemPrompt = `
       You are an expert Election Process Assistant. Your goal is to provide accurate, neutral, and helpful information about elections, voter registration, deadlines, and polling processes.
+      
       Current context: ${JSON.stringify(context || {})}
+      ${locationInfo}
+      
       IMPORTANT: The user's selected language is ${language}. You MUST respond primarily in ${language === 'hi' ? 'Hindi' : language === 'mr' ? 'Marathi' : 'English'}.
       Guidelines:
       1. Stay non-political and unbiased.
       2. If you don't know the specific deadline for a region, encourage the user to check the official state election commission website.
       3. Be concise and friendly.
       4. Support multiple languages if the user explicitly asks for a different one, but default to ${language}.
+      5. Use the provided location context to be more helpful with local queries if applicable.
     `;
 
     const result = await model.generateContent([systemPrompt, message]);
