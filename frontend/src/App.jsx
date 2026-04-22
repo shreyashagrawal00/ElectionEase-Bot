@@ -13,6 +13,7 @@ import KnowledgeBase from './pages/KnowledgeBase';
 import ElectionTimeline from './pages/ElectionTimeline';
 import Candidates from './pages/Candidates';
 import CandidateComparison from './pages/CandidateComparison';
+import VoterMatchQuiz from './pages/VoterMatchQuiz';
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
                 <Route path="/timeline/:id" element={<ElectionTimeline />} />
                 <Route path="/candidates" element={<Candidates />} />
                 <Route path="/compare" element={<CandidateComparison />} />
+                <Route path="/match" element={<VoterMatchQuiz />} />
               </Routes>
             </main>
             <Chatbot />

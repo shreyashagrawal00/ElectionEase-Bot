@@ -64,7 +64,21 @@ const resources = {
       "compare_selection_full": "Comparison limit reached (max 2)",
       "start_comparison": "Start Comparison",
       "selection_empty": "Select up to 2 candidates to compare",
-      "vs": "VERSUS"
+      "vs": "VERSUS",
+      "quiz": {
+        "title": "Voter Match Quiz",
+        "subtitle": "Discover which candidates align with your values",
+        "question_prefix": "Question",
+        "next": "Next Question",
+        "see_results": "See Your Matches",
+        "match_calc": "Calculating alignment...",
+        "match_found": "Matches Found!",
+        "questions": [
+          { "id": "infra", "text": "What is your top priority for national development?", "options": ["World-class Infrastructure", "Affordable Healthcare", "Universal Education", "Agricultural Growth"] },
+          { "id": "economy", "text": "Which economic approach do you support?", "options": ["Tech & Innovation", "Small Business Support", "Social Welfare focus", "Industrial Expansion"] }
+        ],
+        "match_badge": "{{percent}}% Match"
+      }
     }
   },
   hi: {
@@ -128,7 +142,21 @@ const resources = {
       "compare_selection_full": "तुलना की सीमा पूरी हो गई (अधिकतम 2)",
       "start_comparison": "तुलना शुरू करें",
       "selection_empty": "तुलना करने के लिए 2 उम्मीदवार चुनें",
-      "vs": "बनाम"
+      "vs": "बनाम",
+      "quiz": {
+        "title": "वोटर मैच क्विज़",
+        "subtitle": "जानें कि आपके मूल्यों के साथ कौन से उम्मीदवार मेल खाते हैं",
+        "question_prefix": "प्रश्न",
+        "next": "अगला प्रश्न",
+        "see_results": "अपने मिलान देखें",
+        "match_calc": "गठजोड़ की गणना की जा रही है...",
+        "match_found": "मिलान मिले!",
+        "questions": [
+          { "id": "infra", "text": "राष्ट्रीय विकास के लिए आपकी सर्वोच्च प्राथमिकता क्या है?", "options": ["विश्व स्तरीय बुनियादी ढांचा", "किफायती स्वास्थ्य सेवा", "सार्वभौमिक शिक्षा", "कृषि विकास"] },
+          { "id": "economy", "text": "आप किस आर्थिक दृष्टिकोण का समर्थन करते हैं?", "options": ["तकनीक और नवाचार", "लघु उद्योग सहायता", "समाज कल्याण", "औद्योगिक विस्तार"] }
+        ],
+        "match_badge": "{{percent}}% मेल"
+      }
     }
   },
   mr: {
@@ -192,7 +220,21 @@ const resources = {
       "compare_selection_full": "तुलना मर्यादा पूर्ण झाली (जास्तीत जास्त 2)",
       "start_comparison": "तुलना सुरू करा",
       "selection_empty": "तुलना करण्यासाठी 2 उमेदवार निवडा",
-      "vs": "विरोधात"
+      "vs": "विरोधात",
+      "quiz": {
+        "title": "मतदार मॅच क्विझ",
+        "subtitle": "तुमच्या मूल्यांशी कोणते उमेदवार जुळतात ते शोधा",
+        "question_prefix": "प्रश्न",
+        "next": "पुढील प्रश्न",
+        "see_results": "तुमचे मॅच पहा",
+        "match_calc": "मॅच मोजत आहोत...",
+        "match_found": "मॅच सापडले!",
+        "questions": [
+          { "id": "infra", "text": "राष्ट्रीय विकासासाठी तुमची सर्वोच्च प्राथमिकता काय आहे?", "options": ["जागतिक दर्जाची पायाभूत सुविधा", "परवडणारी आरोग्य सेवा", "सार्वत्रिक शिक्षण", "कृषी विकास"] },
+          { "id": "economy", "text": "तुम्ही कोणत्या आर्थिक दृष्टिकोनाला पाठिंबा देता?", "options": ["तंत्रज्ञान आणि नवकल्पना", "लघु उद्योग समर्थन", "समाज कल्याण", "औद्योगिक विस्तार"] }
+        ],
+        "match_badge": "{{percent}}% मॅच"
+      }
     }
   }
 };

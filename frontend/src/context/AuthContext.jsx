@@ -7,6 +7,10 @@ export const useAuth = () => useContext(AuthContext);
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [quizResults, setQuizResults] = useState(() => {
+    const saved = localStorage.getItem('quizResults');
+    return saved ? JSON.parse(saved) : null;
+  });
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -59,8 +63,13 @@ export const AuthProvider = ({ children }) => {
     setUser({...user, savedCandidates: res.data});
   }
 
+  const saveQuizResults = (results) => {
+    setQuizResults(results);
+    localStorage.setItem('quizResults', JSON.stringify(results));
+  };
+
   return (
-    <AuthContext.Provider value={{ user, login, register, logout, loading, updateProgress, toggleCandidate }}>
+    <AuthContext.Provider value={{ user, login, register, logout, loading, updateProgress, toggleCandidate, quizResults, saveQuizResults }}>
       {children}
     </AuthContext.Provider>
   );

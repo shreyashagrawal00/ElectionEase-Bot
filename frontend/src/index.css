@@ -74,59 +74,94 @@ html.text-large { font-size: 20px; }
   color: #fff !important;
 }
 
+/* Universal borders and removals */
+.high-contrast * {
+  border-color: #fff !important;
+  background-image: none !important;
+  box-shadow: none !important;
+  text-shadow: none !important;
+  backdrop-filter: none !important;
+}
+
+/* Specific surface overrides */
 .high-contrast .glass-card, 
 .high-contrast .glass-nav,
 .high-contrast .bg-white,
 .high-contrast .bg-slate-50,
 .high-contrast .bg-slate-100,
-.high-contrast Card {
+.high-contrast [class*="bg-primary-"],
+.high-contrast [class*="bg-slate-"] {
   background-color: #000 !important;
-  background: #000 !important;
   border: 2px solid #fff !important;
-  backdrop-filter: none !important;
-  box-shadow: none !important;
 }
 
-.high-contrast h1, 
-.high-contrast h2, 
-.high-contrast h3, 
-.high-contrast h4,
-.high-contrast p,
-.high-contrast span,
-.high-contrast label {
+/* Text overrides for importance */
+.high-contrast h1, .high-contrast h2, .high-contrast h3, .high-contrast h4,
+.high-contrast p, .high-contrast span, .high-contrast label, .high-contrast div {
   color: #fff !important;
 }
 
 .high-contrast .text-primary-600,
 .high-contrast .text-primary-500,
-.high-contrast .text-slate-500,
-.high-contrast .text-slate-400,
-.high-contrast .text-slate-600 {
-  color: #ffff00 !important;
+.high-contrast .text-emerald-600,
+.high-contrast .text-indigo-600,
+.high-contrast [class*="text-primary-"],
+.high-contrast [class*="text-slate-400"] {
+  color: #ffff00 !important; /* High Visibility Yellow */
 }
 
+/* Buttons and Actions */
 .high-contrast button,
-.high-contrast .premium-gradient,
-.high-contrast .bg-primary-600,
 .high-contrast [role="button"] {
+  background-color: #000 !important;
+  color: #fff !important;
+  border: 2px solid #fff !important;
+  font-weight: 800 !important;
+  text-transform: uppercase !important;
+}
+
+.high-contrast button:hover {
+  background-color: #fff !important;
+  color: #000 !important;
+}
+
+/* Primary Action Exception */
+.high-contrast .bg-primary-600,
+.high-contrast .premium-gradient,
+.high-contrast button[class*="bg-primary"] {
   background-color: #ffff00 !important;
   background: #ffff00 !important;
   color: #000 !important;
-  font-weight: 900 !important;
-  border: 2px solid #fff !important;
+  border: 2px solid #ffff00 !important;
 }
 
-.high-contrast .premium-gradient * {
-  background-color: transparent !important;
-  color: #000 !important;
-}
-
+/* Icon Visibility */
+.high-contrast svg,
 .high-contrast svg path {
-  stroke: #fff !important;
+  stroke: currentColor !important;
 }
 
-.high-contrast input, .high-contrast select, .high-contrast textarea {
+/* Inputs and Forms */
+.high-contrast input, 
+.high-contrast select, 
+.high-contrast textarea {
   background-color: #000 !important;
-  border: 2px solid #fff !important;
+  border: 3px solid #fff !important;
   color: #fff !important;
+  border-radius: 0 !important; /* Sharper edges for clarity */
+}
+
+.high-contrast input:focus {
+  border-color: #ffff00 !important;
+  outline: 2px solid #ffff00 !important;
+}
+
+/* Accessibility specific helpers */
+.high-contrast .animate-pulse,
+.high-contrast .animate-spin {
+  animation-duration: 2s !important; /* Slower animations */
+}
+
+.high-contrast .rounded-full {
+  border-radius: 8px !important; /* More geometric for clarity */
 }

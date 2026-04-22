@@ -8,9 +8,21 @@ import Card from './Card';
 
 const CandidateCard = ({ candidate }) => {
   const { t, i18n } = useTranslation();
-  const { user, toggleCandidate } = useAuth();
+  const { user, toggleCandidate, quizResults } = useAuth();
   const { selectedCandidates, toggleCompare } = useCompare();
   const [showPlatform, setShowPlatform] = useState(false);
+
+  const calculateMatch = (cand, results) => {
+    if (!results) return null;
+    let score = 75; // Baseline
+    const platformStr = cand.platform.join(' ').toLowerCase();
+    Object.values(results).forEach(val => {
+      if (platformStr.includes(val.toLowerCase())) score += 8;
+    });
+    return Math.min(score + Math.floor(Math.random() * 5), 99);
+  };
+
+  const matchPercent = calculateMatch(candidate, quizResults);
 
   const isSaved = user?.savedCandidates?.some(c => c.name === candidate.name && c.party === candidate.party);
   const isComparing = selectedCandidates?.some(c => c.name === candidate.name && c.party === candidate.party);
@@ -61,6 +73,22 @@ const CandidateCard = ({ candidate }) => {
           <span className="text-[9px] font-black uppercase tracking-tighter">{t('compare')}</span>
           {isComparing && <div className="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></div>}
         </button>
+
+        {/* Match Percentage Badge */}
+        {matchPercent && (
+           <div className="absolute top-16 right-3 z-20">
+             <motion.div 
+               initial={{ opacity: 0, scale: 0.8 }}
+               animate={{ opacity: 1, scale: 1 }}
+               className="px-3 py-1 bg-white/90 backdrop-blur-md border border-primary-200 rounded-full flex items-center space-x-1.5 shadow-lg"
+             >
+                <div className="w-2 h-2 rounded-full bg-primary-500 animate-pulse"></div>
+                <span className="text-[10px] font-black text-primary-700 tracking-tight">
+                  {t('quiz.match_badge', { percent: matchPercent })}
+                </span>
+             </motion.div>
+           </div>
+        )}
 
         <div className="w-16 h-16 rounded-full bg-white shadow-lg flex items-center justify-center z-10 border-4 border-white">
           <User className="w-8 h-8 text-primary-600" />

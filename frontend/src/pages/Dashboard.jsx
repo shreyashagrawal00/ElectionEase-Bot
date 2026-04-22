@@ -12,9 +12,10 @@ import NewsSection from '../components/NewsSection';
 import VoterStats from '../components/VoterStats';
 import IndiaMap from '../components/ui/IndiaMap';
 import CandidateCard from '../components/ui/CandidateCard';
+import { Target as MatchIcon, Zap } from 'lucide-react';
 
 const Dashboard = () => {
-  const { user, loading, updateProgress } = useAuth();
+  const { user, loading, updateProgress, quizResults } = useAuth();
   const navigate = useNavigate();
   const { t, i18n } = useTranslation();
   const [elections, setElections] = useState([]);
@@ -173,6 +174,25 @@ const Dashboard = () => {
               </div>
            </Card>
            
+           {/* Voter Match Quiz CTA */}
+           <Card className="p-8 bg-gradient-to-br from-indigo-950 to-slate-900 border-indigo-900 text-white rounded-[2.5rem] shadow-2xl relative overflow-hidden group">
+              <div className="absolute -top-24 -right-24 w-64 h-64 bg-indigo-500/20 rounded-full blur-3xl group-hover:bg-indigo-500/30 transition-all duration-700"></div>
+              <div className="relative z-10">
+                <div className="w-14 h-14 bg-white/10 rounded-2xl flex items-center justify-center mb-6">
+                   <MatchIcon className="w-7 h-7 text-indigo-400" />
+                </div>
+                <h4 className="text-slate-400 text-xs font-black uppercase tracking-[0.2em] mb-2">Civic Matching Engine</h4>
+                <h3 className="text-2xl font-black mb-4 leading-tight">Which candidate aligns with your values?</h3>
+                <p className="text-slate-400 text-sm mb-8 leading-relaxed">Take our values assessment to unlock personalized match percentages across all candidate profiles.</p>
+                <Button 
+                  onClick={() => navigate('/match')} 
+                  className="w-full bg-white text-indigo-900 hover:bg-slate-100 font-black py-4 rounded-2xl shadow-xl transition-all hover:scale-[1.02]"
+                >
+                   {quizResults ? "Retake Assessment" : "Start Matching →"}
+                </Button>
+              </div>
+           </Card>
+
            {/* Search/Discovery Tooltip */}
            <div className="p-6 bg-primary-50/50 rounded-[2rem] border border-primary-100/50">
               <div className="flex items-start space-x-4">
