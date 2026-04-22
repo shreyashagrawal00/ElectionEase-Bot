@@ -1,8 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import logo from '../../assets/logo.png';
 import { useAuth } from '../../context/AuthContext';
 import { useAccessibility } from '../../context/AccessibilityContext';
-import { Settings, Info, LogOut, CheckCircle, Globe } from 'lucide-react';
+import { Settings, Info, LogOut, Globe } from 'lucide-react';
 import Button from '../ui/Button';
 import { useTranslation } from 'react-i18next';
 
@@ -21,7 +22,7 @@ const Navbar = () => {
         <div className="flex justify-between h-16">
           <div className="flex items-center">
             <Link to="/" className="flex items-center">
-              <CheckCircle className="h-8 w-8 text-primary-600 mr-2" />
+              <img src={logo} alt="ElectionEase Logo" className="h-10 w-10 mr-2 rounded-lg object-contain" />
               <span className="font-bold text-xl text-slate-900 leading-tight hidden xs:block">
                 ElectionEase
               </span>

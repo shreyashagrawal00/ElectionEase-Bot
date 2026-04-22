@@ -7,7 +7,7 @@ const Chatbot = () => {
   const { t, i18n } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([
-    { role: 'assistant', content: "Hello! I'm your Election Assistant. How can I help you today?" }
+    { role: 'assistant', content: "Hello! I'm your ElectionEase Assistant. How can I help you today?" }
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -72,7 +72,7 @@ const Chatbot = () => {
                 <Bot className="w-5 h-5" />
               </div>
               <div>
-                <h3 className="font-bold text-sm">Election Assistant</h3>
+                <h3 className="font-bold text-sm">ElectionEase Assistant</h3>
                 <span className="text-[10px] opacity-80 uppercase tracking-widest font-bold">AI Powered</span>
               </div>
             </div>
