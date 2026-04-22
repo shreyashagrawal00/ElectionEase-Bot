@@ -6,7 +6,9 @@ const Card = ({ children, className = '' }) => {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className={`bg-white rounded-xl shadow-lg border border-slate-100 overflow-hidden ${className}`}
+      whileHover={{ y: -5 }}
+      transition={{ duration: 0.3 }}
+      className={`glass-card rounded-2xl overflow-hidden ${className}`}
     >
       {children}
     </motion.div>

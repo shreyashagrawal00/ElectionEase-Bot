@@ -44,7 +44,8 @@ const Chatbot = () => {
       setMessages(prev => [...prev, assistantMessage]);
     } catch (err) {
       console.error(err);
-      setMessages(prev => [...prev, { role: 'assistant', content: "Sorry, I'm having trouble connecting right now. Please try again later." }]);
+      const errorMessage = err.response?.data?.error || "Sorry, I'm having trouble connecting to the AI service right now. Please try again later.";
+      setMessages(prev => [...prev, { role: 'assistant', content: errorMessage }]);
     } finally {
       setIsLoading(false);
     }

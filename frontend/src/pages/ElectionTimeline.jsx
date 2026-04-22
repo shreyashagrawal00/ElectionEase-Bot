@@ -37,68 +37,88 @@ const ElectionTimeline = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto py-12 px-4 sm:px-6">
-      <button 
+    <div className="max-w-6xl mx-auto py-16 px-4 sm:px-6">
+      <motion.button 
+        whileHover={{ x: -4 }}
         onClick={() => navigate('/dashboard')}
-        className="flex items-center text-slate-500 hover:text-primary-600 transition-colors mb-8 group"
+        className="flex items-center text-slate-400 hover:text-primary-600 transition-colors mb-12 group bg-white px-4 py-2 rounded-full shadow-sm border border-slate-100"
       >
         <ArrowLeft className="w-5 h-5 mr-2 group-hover:-translate-x-1 transition-transform" />
-        <span className="font-medium">{t('back_to_dashboard')}</span>
-      </button>
+        <span className="font-bold text-sm uppercase tracking-widest">{t('back_to_dashboard')}</span>
+      </motion.button>
 
-      <div className="mb-12">
-        <h1 className="text-4xl font-extrabold text-slate-900 mb-4">{getLocalized(election.title)}</h1>
-        <div className="flex flex-wrap gap-4 text-slate-500">
-          <div className="flex items-center">
-            <Calendar className="w-4 h-4 mr-2 text-primary-500" />
+      <div className="mb-16">
+        <motion.div
+           initial={{ opacity: 0, scale: 0.95 }}
+           animate={{ opacity: 1, scale: 1 }}
+           className="premium-gradient p-1 w-20 h-2 rounded-full mb-6"
+        ></motion.div>
+        <h1 className="text-5xl font-extrabold text-slate-900 mb-6 tracking-tight leading-tight">
+          {getLocalized(election.title)}
+        </h1>
+        <div className="flex flex-wrap gap-6 text-slate-600 font-semibold uppercase tracking-widest text-xs">
+          <div className="flex items-center bg-slate-100 px-3 py-1.5 rounded-lg border border-slate-200/50">
+            <Calendar className="w-4 h-4 mr-2 text-primary-600" />
             <span>{new Date(election.date).toLocaleDateString(i18n.language === 'en' ? 'en-US' : 'hi-IN')}</span>
           </div>
-          <div className="flex items-center">
-            <MapPin className="w-4 h-4 mr-2 text-primary-500" />
+          <div className="flex items-center bg-slate-100 px-3 py-1.5 rounded-lg border border-slate-200/50">
+            <MapPin className="w-4 h-4 mr-2 text-primary-600" />
             <span>{election.state || 'National'} {election.district ? ` - ${election.district}` : ''}</span>
           </div>
         </div>
       </div>
 
-      <div className="grid gap-12 lg:grid-cols-3">
+      <div className="grid gap-16 lg:grid-cols-4">
         {/* Stages Timeline */}
-        <div className="lg:col-span-2">
-          <h2 className="text-2xl font-bold text-slate-800 mb-8 flex items-center">
-            <div className="w-8 h-8 rounded-lg bg-primary-100 flex items-center justify-center mr-3">
-               <Calendar className="w-4 h-4 text-primary-600" />
+        <div className="lg:col-span-3">
+          <h2 className="text-3xl font-extrabold text-slate-900 mb-12 flex items-center tracking-tight">
+            <div className="w-10 h-10 rounded-2xl bg-primary-100 flex items-center justify-center mr-4 shadow-sm">
+               <Calendar className="w-5 h-5 text-primary-600" />
             </div>
             {t('election_stages')}
           </h2>
           
           <div className="space-y-0 relative">
             {/* Timeline connector line */}
-            <div className="absolute left-6 top-2 bottom-2 w-0.5 bg-slate-200" />
+            <div className="absolute left-[27px] top-4 bottom-4 w-1.5 bg-slate-100 rounded-full" />
             
             {election.steps.sort((a, b) => a.order - b.order).map((step, idx) => (
               <motion.div 
                 key={idx}
                 initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
                 transition={{ delay: idx * 0.1 }}
-                className="relative pl-16 pb-12 last:pb-0"
+                className="relative pl-24 pb-16 last:pb-0 group"
               >
-                <div className={`absolute left-0 w-12 h-12 rounded-full border-4 border-white shadow-sm flex items-center justify-center z-10 transition-colors ${
-                  idx === 0 ? 'bg-primary-600' : 'bg-slate-200'
+                <div className={`absolute left-0 w-14 h-14 rounded-2xl border-4 border-slate-50 shadow-md flex items-center justify-center z-10 transition-all duration-500 group-hover:scale-110 ${
+                  idx === 0 ? 'premium-gradient text-white shadow-primary-200' : 'bg-white text-slate-300'
                 }`}>
-                  {idx === 0 ? <CheckCircle2 className="w-6 h-6 text-white" /> : <Circle className="w-5 h-5 text-slate-400" />}
+                  {idx === 0 ? <CheckCircle2 className="w-7 h-7" /> : <Circle className="w-6 h-6" />}
                 </div>
-                <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow">
-                  <h3 className="text-lg font-bold text-slate-900 mb-1">{getLocalized(step.title)}</h3>
-                  <p className="text-slate-500 text-sm mb-4">{getLocalized(step.description)}</p>
+                
+                <div className="glass-card p-8 rounded-3xl transition-all duration-300 group-hover:shadow-2xl group-hover:shadow-slate-200 group-hover:border-primary-100">
+                  <div className="flex items-start justify-between mb-4">
+                    <h3 className="text-2xl font-extrabold text-slate-900 leading-tight">{getLocalized(step.title)}</h3>
+                    {idx === 0 && (
+                      <span className="bg-primary-50 text-primary-700 text-[10px] font-extrabold uppercase tracking-widest px-3 py-1 rounded-full border border-primary-100">
+                        Current Stage
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-slate-500 text-lg mb-8 leading-relaxed">{getLocalized(step.description)}</p>
+                  
                   {step.actionLink && (
-                    <a 
+                    <motion.a 
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
                       href={step.actionLink} 
                       target="_blank" 
                       rel="noopener noreferrer"
-                      className="inline-block text-primary-600 font-bold text-xs uppercase tracking-widest hover:text-primary-700 underline underline-offset-4"
+                      className="inline-flex items-center bg-slate-900 text-white px-8 py-3 rounded-xl font-bold text-sm hover:bg-black transition-all shadow-lg"
                     >
                       {t('get_started')}
-                    </a>
+                    </motion.a>
                   )}
                 </div>
               </motion.div>

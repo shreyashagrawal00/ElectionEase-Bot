@@ -4,10 +4,12 @@ import { useNavigate } from 'react-router-dom';
 import Card from '../components/ui/Card';
 import Button from '../components/ui/Button';
 import axios from 'axios';
-import { CheckCircle, Circle, MapPin, Search, UserCheck, Filter } from 'lucide-react';
+import { CheckCircle, Circle, MapPin, Search, UserCheck, Filter, Calendar } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { motion } from 'framer-motion';
 
 import NewsSection from '../components/NewsSection';
+import VoterStats from '../components/VoterStats';
 
 const Dashboard = () => {
   const { user, loading, updateProgress } = useAuth();
@@ -59,22 +61,37 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="max-w-5xl mx-auto py-8 px-4 sm:px-6">
-      <div className="flex flex-col md:flex-row md:items-end justify-between mb-8">
+    <div className="max-w-6xl mx-auto py-12 px-4 sm:px-6">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between mb-12 gap-8">
         <div>
-          <h1 className="text-3xl font-bold text-slate-900 mb-2">{t('dashboard_title', { name: user.name })}</h1>
-          <p className="text-slate-500">{t('subtitle')}</p>
+          <h1 className="text-4xl font-extrabold text-slate-900 mb-3 tracking-tight">
+            {t('dashboard_title', { name: user.name })}
+          </h1>
+          <p className="text-slate-500 text-lg max-w-xl">{t('subtitle')}</p>
         </div>
-        <div className="mt-4 md:mt-0 w-full md:w-64">
-           <div className="flex justify-between text-sm mb-1 font-medium text-slate-700">
-              <span>{t('readiness')}</span>
-              <span>{progressPercentage}%</span>
+        
+        <div className="glass-card p-6 rounded-3xl flex-1 max-w-md">
+           <div className="flex justify-between items-end mb-3">
+              <div>
+                <span className="text-sm font-bold uppercase tracking-wider text-slate-400 block mb-1">{t('readiness')}</span>
+                <span className="text-4xl font-extrabold text-primary-600 text-glow">{progressPercentage}%</span>
+              </div>
+              <div className="text-right">
+                <span className="text-sm font-semibold text-slate-500">{completedCount} of {steps.length} Steps</span>
+              </div>
            </div>
-           <div className="w-full bg-slate-200 rounded-full h-2.5">
-              <div className="bg-primary-600 h-2.5 rounded-full transition-all duration-500" style={{ width: `${progressPercentage}%` }}></div>
+           <div className="w-full bg-slate-100 rounded-full h-4 overflow-hidden p-1 shadow-inner border border-slate-200/50">
+              <motion.div 
+                initial={{ width: 0 }}
+                animate={{ width: `${progressPercentage}%` }}
+                transition={{ duration: 1, ease: "easeOut" }}
+                className="premium-gradient h-full rounded-full shadow-lg"
+              ></motion.div>
            </div>
         </div>
       </div>
+
+      <VoterStats />
 
       {/* Location Filter */}
       <Card className="p-4 mb-8 bg-white border-slate-200">
@@ -127,22 +144,35 @@ const Dashboard = () => {
         })}
       </div>
 
-      <div className="mt-12">
-        <h2 className="text-2xl font-bold mb-4">{t('upcoming_elections')}</h2>
+      <div className="mt-16">
+        <h2 className="text-3xl font-bold text-slate-900 mb-8 tracking-tight">{t('upcoming_elections')}</h2>
         {elections.length === 0 ? (
-          <p className="text-slate-500 italic">No elections found for this region.</p>
+          <div className="glass-card p-12 text-center rounded-3xl border-dashed border-2 border-slate-200">
+            <p className="text-slate-400 italic text-lg">No elections found for this region.</p>
+          </div>
         ) : (
-          elections.map(election => (
-            <Card key={election._id} className="p-6 mb-4 flex justify-between items-center bg-white border-l-4 border-l-primary-500">
-              <div>
-                <h3 className="text-xl font-bold text-slate-800">{getLocalized(election.title)}</h3>
-                <p className="text-slate-500">
-                  {new Date(election.date).toLocaleDateString(i18n.language === 'en' ? 'en-US' : 'hi-IN')} &bull; {election.state || 'National'}
-                </p>
-              </div>
-              <Button onClick={() => navigate(`/timeline/${election._id}`)}>{t('view_timeline')}</Button>
-            </Card>
-          ))
+          <div className="grid gap-6">
+            {elections.map(election => (
+              <Card key={election._id} className="p-8 flex flex-col sm:flex-row justify-between items-center bg-white border-l-8 border-l-primary-500">
+                <div className="mb-6 sm:mb-0">
+                  <h3 className="text-2xl font-extrabold text-slate-900 mb-2">{getLocalized(election.title)}</h3>
+                  <div className="flex items-center text-slate-500 font-medium">
+                    <Calendar className="w-4 h-4 mr-2 text-primary-500" />
+                    <span>{new Date(election.date).toLocaleDateString(i18n.language === 'en' ? 'en-US' : 'hi-IN')}</span>
+                    <span className="mx-2 opacity-30">|</span>
+                    <MapPin className="w-4 h-4 mr-2 text-primary-500" />
+                    <span>{election.state || 'National'}</span>
+                  </div>
+                </div>
+                <Button 
+                  onClick={() => navigate(`/timeline/${election._id}`)}
+                  className="w-full sm:w-auto px-10 py-4 shadow-xl hover:shadow-primary-200 transition-all"
+                >
+                  {t('view_timeline')}
+                </Button>
+              </Card>
+            ))}
+          </div>
         )}
       </div>
 
