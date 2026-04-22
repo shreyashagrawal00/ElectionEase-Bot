@@ -107,14 +107,14 @@ const CandidateComparison = () => {
 };
 
 const ComparisonRow = ({ label, val1, val2, isItalic }) => (
-    <div className="grid grid-cols-1 lg:grid-cols-4 items-stretch">
+    <div className="grid grid-cols-1 lg:grid-cols-3 items-stretch">
         <div className="p-8 bg-slate-50 lg:border-r border-slate-100 flex items-center">
             <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">{label}</span>
         </div>
-        <div className="p-8 lg:col-span-1 border-r border-slate-100">
+        <div className="p-8 border-r border-slate-100">
             <div className={`text-slate-700 font-medium leading-relaxed ${isItalic ? 'italic text-sm' : ''}`}>{val1}</div>
         </div>
-        <div className="p-8 lg:col-span-2">
+        <div className="p-8">
             <div className={`text-slate-700 font-medium leading-relaxed ${isItalic ? 'italic text-sm' : ''}`}>{val2}</div>
         </div>
     </div>

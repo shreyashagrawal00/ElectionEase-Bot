@@ -23,10 +23,14 @@ const AccessibilityToolbar = () => {
             initial={{ opacity: 0, x: -20, scale: 0.9 }}
             animate={{ opacity: 1, x: 0, scale: 1 }}
             exit={{ opacity: 0, x: -20, scale: 0.9 }}
-            className="bg-white/90 backdrop-blur-xl rounded-[2.5rem] shadow-2xl border border-white/50 p-8 mb-6 w-72"
+            className={`rounded-[2.5rem] shadow-2xl border p-8 mb-6 w-72 transition-all duration-300 ${
+              highContrast 
+                ? 'bg-black border-2 border-white' 
+                : 'bg-white/95 backdrop-blur-2xl border-slate-200/50'
+            }`}
           >
-            <div className="flex items-center justify-between mb-8 pb-4 border-b border-slate-100">
-               <h3 className="text-xs font-black text-slate-800 uppercase tracking-[0.2em]">
+            <div className={`flex items-center justify-between mb-8 pb-4 border-b ${highContrast ? 'border-white' : 'border-slate-100'}`}>
+               <h3 className={`text-xs font-black uppercase tracking-[0.2em] ${highContrast ? 'text-white' : 'text-slate-800'}`}>
                  App Settings
                </h3>
                <div className="w-2 h-2 rounded-full bg-primary-500 animate-pulse"></div>
@@ -35,24 +39,22 @@ const AccessibilityToolbar = () => {
             {/* High Contrast Toggle */}
             <div className="mb-10">
               <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center space-x-3">
-                  <div className="p-2 bg-slate-100 rounded-xl">
-                    <Eye className="w-4 h-4 text-slate-600" />
-                  </div>
-                  <span className="text-sm font-bold text-slate-800">High Contrast</span>
+                <div className={`p-2 rounded-xl ${highContrast ? 'bg-slate-800' : 'bg-slate-100'}`}>
+                  <Eye className={`w-4 h-4 ${highContrast ? 'text-white' : 'text-slate-600'}`} />
                 </div>
-                <button
-                  onClick={toggleHighContrast}
-                  className={`w-12 h-6 rounded-full transition-all duration-500 relative shadow-inner ${highContrast ? 'bg-primary-600' : 'bg-slate-200'}`}
-                >
-                  <motion.div
-                    animate={{ x: highContrast ? 28 : 4 }}
-                    transition={{ type: "spring", stiffness: 500, damping: 30 }}
-                    className="absolute top-1 left-0 w-4 h-4 bg-white rounded-full shadow-md"
-                  />
-                </button>
+                <span className={`text-sm font-bold ${highContrast ? 'text-white' : 'text-slate-800'}`}>High Contrast</span>
               </div>
-              <p className="text-[10px] text-slate-400 font-medium leading-relaxed leading-relaxed">
+              <button
+                onClick={toggleHighContrast}
+                className={`w-12 h-6 rounded-full transition-all duration-500 relative shadow-inner ${highContrast ? 'bg-primary-600' : 'bg-slate-200'}`}
+              >
+                <motion.div
+                  animate={{ x: highContrast ? 28 : 4 }}
+                  transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                  className="absolute top-1 left-0 w-4 h-4 bg-white rounded-full shadow-md"
+                />
+              </button>
+              <p className={`mt-3 text-[10px] font-medium leading-relaxed ${highContrast ? 'text-slate-300' : 'text-slate-400'}`}>
                 Enhances visibility for those with low vision or light sensitivity.
               </p>
             </div>
@@ -60,10 +62,10 @@ const AccessibilityToolbar = () => {
             {/* Font Size Selector */}
             <div>
               <div className="flex items-center space-x-3 mb-6">
-                <div className="p-2 bg-slate-100 rounded-xl">
-                  <Type className="w-4 h-4 text-slate-600" />
+                <div className={`p-2 rounded-xl ${highContrast ? 'bg-slate-800' : 'bg-slate-100'}`}>
+                  <Type className={`w-4 h-4 ${highContrast ? 'text-white' : 'text-slate-600'}`} />
                 </div>
-                <span className="text-sm font-bold text-slate-800">Text Scaling</span>
+                <span className={`text-sm font-bold ${highContrast ? 'text-white' : 'text-slate-800'}`}>Text Scaling</span>
               </div>
               <div className="grid grid-cols-3 gap-3">
                 {fontSizes.map((f) => (

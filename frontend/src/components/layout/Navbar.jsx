@@ -58,8 +58,8 @@ const Navbar = () => {
 
             {user ? (
               <>
-                <Link to="/dashboard" className="text-slate-700 hover:text-primary-600 font-medium hidden xs:block">Dashboard</Link>
-                <Link to="/candidates" className="text-slate-700 hover:text-primary-600 font-medium hidden xs:block flex items-center">
+                <Link to="/dashboard" className="text-slate-700 hover:text-primary-600 font-medium hidden sm:block">Dashboard</Link>
+                <Link to="/candidates" className="text-slate-700 hover:text-primary-600 font-medium hidden sm:flex items-center">
                   <span>Candidates</span>
                 </Link>
                 <Button variant="outline" onClick={logout} className="flex items-center text-sm px-3 py-1">

@@ -28,9 +28,9 @@ const IndiaMap = ({ selectedState, onSelectState }) => {
                 d={loc.path}
                 initial={{ fill: "#f8fafc", scale: 1 }}
                 animate={{
-                  fill: isSelected ? "#4f46e5" : (isHovered ? "#c7d2fe" : "#f1f5f9"),
+                  fill: isSelected ? "#16a34a" : (isHovered ? "#dcfce7" : "#f1f5f9"),
                   scale: isSelected ? 1.02 : 1,
-                  stroke: isSelected ? "#3730a3" : "#cbd5e1",
+                  stroke: isSelected ? "#15803d" : "#cbd5e1",
                   strokeWidth: isSelected || isHovered ? 1.5 : 0.5,
                 }}
                 whileHover={{ 

@@ -39,7 +39,7 @@
   }
   
   .text-glow {
-    text-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
+    text-shadow: 0 0 20px rgba(22, 163, 74, 0.35);
   }
 }
 
@@ -87,12 +87,13 @@ html.text-large { font-size: 20px; }
 .high-contrast .glass-card, 
 .high-contrast .glass-nav,
 .high-contrast .bg-white,
-.high-contrast .bg-slate-50,
-.high-contrast .bg-slate-100,
-.high-contrast [class*="bg-primary-"],
-.high-contrast [class*="bg-slate-"] {
+.high-contrast .bg-slate-100 {
   background-color: #000 !important;
   border: 2px solid #fff !important;
+}
+
+.high-contrast .bg-slate-50 {
+  background-color: #000 !important;
 }
 
 /* Text overrides for importance */
@@ -105,9 +106,13 @@ html.text-large { font-size: 20px; }
 .high-contrast .text-primary-500,
 .high-contrast .text-emerald-600,
 .high-contrast .text-indigo-600,
-.high-contrast [class*="text-primary-"],
-.high-contrast [class*="text-slate-400"] {
+.high-contrast [class*="text-primary-"] {
   color: #ffff00 !important; /* High Visibility Yellow */
+}
+
+.high-contrast .text-slate-400,
+.high-contrast .text-slate-500 {
+  color: #ccc !important;
 }
 
 /* Buttons and Actions */
