@@ -51,8 +51,16 @@ export const AuthProvider = ({ children }) => {
       setUser({...user, progress: res.data});
   }
 
+  const toggleCandidate = async (candidate) => {
+    const token = localStorage.getItem('token');
+    const res = await axios.put('http://127.0.0.1:5000/api/auth/save-candidate', { candidate }, {
+       headers: { 'x-auth-token': token }
+    });
+    setUser({...user, savedCandidates: res.data});
+  }
+
   return (
-    <AuthContext.Provider value={{ user, login, register, logout, loading, updateProgress }}>
+    <AuthContext.Provider value={{ user, login, register, logout, loading, updateProgress, toggleCandidate }}>
       {children}
     </AuthContext.Provider>
   );

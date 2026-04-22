@@ -1,13 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Search, Filter, Users, MapPin, Loader2 } from 'lucide-react';
+import { Search, Filter, Users, MapPin, Loader2, ArrowRight, Zap } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useCompare } from '../context/CompareContext';
 import CandidateCard from '../components/ui/CandidateCard';
 import Card from '../components/ui/Card';
 
 const Candidates = () => {
   const { t, i18n } = useTranslation();
+  const navigate = useNavigate();
+  const { selectedCandidates, clearCompare } = useCompare();
   const [candidates, setCandidates] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
@@ -158,6 +162,61 @@ const Candidates = () => {
           )}
         </>
       )}
+
+      {/* Floating Comparison Bar */}
+      <AnimatePresence>
+        {selectedCandidates.length > 0 && (
+          <motion.div
+            initial={{ y: 100, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: 100, opacity: 0 }}
+            className="fixed bottom-8 left-1/2 -translate-x-1/2 z-40 w-full max-w-2xl px-4"
+          >
+            <div className="bg-slate-900 border border-slate-800 text-white rounded-[2rem] shadow-2xl p-4 flex items-center justify-between backdrop-blur-xl bg-opacity-95">
+              <div className="flex items-center space-x-5 pl-4">
+                <div className="flex -space-x-3">
+                   {selectedCandidates.map((c, i) => (
+                      <div key={i} className="w-12 h-12 rounded-full bg-primary-600 border-2 border-slate-900 flex items-center justify-center font-black text-xs shadow-lg">
+                        {c.name.charAt(0)}
+                      </div>
+                   ))}
+                   {selectedCandidates.length < 2 && (
+                      <motion.div 
+                        animate={{ opacity: [0.5, 1, 0.5] }}
+                        transition={{ repeat: Infinity, duration: 2 }}
+                        className="w-12 h-12 rounded-full bg-slate-800 border-2 border-slate-900 border-dashed flex items-center justify-center text-slate-500"
+                      >
+                        <Users className="w-5 h-5" />
+                      </motion.div>
+                   )}
+                </div>
+                <div className="hidden sm:block">
+                  <p className="text-sm font-bold">{selectedCandidates.length === 1 ? 'Select another candidate' : 'Ready to compare candidates'}</p>
+                  <p className="text-[10px] text-slate-500 font-black uppercase tracking-[0.2em] mt-0.5">Selection Tracker</p>
+                </div>
+              </div>
+              
+              <div className="flex items-center space-x-3">
+                 <button 
+                  onClick={clearCompare} 
+                  className="p-3 text-slate-500 hover:text-white transition-colors"
+                  title="Clear Selection"
+                 >
+                   <Zap className="w-5 h-5" />
+                 </button>
+                 <button 
+                   disabled={selectedCandidates.length < 2}
+                   onClick={() => navigate('/compare')}
+                   className={`px-8 py-4 rounded-2xl font-black text-sm flex items-center transition-all ${selectedCandidates.length === 2 ? 'bg-primary-500 hover:bg-primary-400 text-white shadow-lg shadow-primary-500/25' : 'bg-slate-800 text-slate-600 cursor-not-allowed'}`}
+                 >
+                   <span>Compare</span>
+                   <ArrowRight className="ml-2 w-4 h-4" />
+                 </button>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

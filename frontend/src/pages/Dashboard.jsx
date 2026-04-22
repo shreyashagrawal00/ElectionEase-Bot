@@ -11,6 +11,7 @@ import { motion } from 'framer-motion';
 import NewsSection from '../components/NewsSection';
 import VoterStats from '../components/VoterStats';
 import IndiaMap from '../components/ui/IndiaMap';
+import CandidateCard from '../components/ui/CandidateCard';
 
 const Dashboard = () => {
   const { user, loading, updateProgress } = useAuth();
@@ -188,6 +189,41 @@ const Dashboard = () => {
            </div>
         </div>
       </div>
+
+      {/* Your Watchlist Section */}
+      {user.savedCandidates && user.savedCandidates.length > 0 && (
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-24"
+        >
+          <div className="flex items-center justify-between mb-10">
+            <div>
+              <h2 className="text-3xl font-black text-slate-900 tracking-tight">Your Personal Watchlist</h2>
+              <p className="text-slate-500 text-sm mt-1 uppercase tracking-[0.2em] font-bold">Priority Research Candidates</p>
+            </div>
+            <Button 
+              variant="ghost" 
+              onClick={() => navigate('/candidates')} 
+              className="text-primary-600 font-bold hover:bg-primary-50 px-6 py-3 rounded-2xl"
+            >
+              Research More Candidates →
+            </Button>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            {user.savedCandidates.map((candidate, idx) => (
+              <motion.div
+                key={idx}
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: idx * 0.1 }}
+              >
+                <CandidateCard candidate={candidate} />
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
+      )}
       
       <div className="grid gap-6 md:grid-cols-3">
         {steps.map((step, idx) => {

@@ -7,5 +7,6 @@ router.post('/register', authController.register);
 router.post('/login', authController.login);
 router.get('/me', authMiddleware, authController.getMe);
 router.put('/progress', authMiddleware, authController.updateProgress);
+router.put('/save-candidate', authMiddleware, authController.toggleSavedCandidate);
 
 module.exports = router;

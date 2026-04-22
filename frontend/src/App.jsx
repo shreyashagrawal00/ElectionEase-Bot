@@ -2,19 +2,23 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { AccessibilityProvider } from './context/AccessibilityContext';
+import { CompareProvider } from './context/CompareContext';
 import Navbar from './components/layout/Navbar';
-import Chatbot from './components/Chatbot'; // Import Chatbot
+import Chatbot from './components/Chatbot';
+import AccessibilityToolbar from './components/ui/AccessibilityToolbar';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import KnowledgeBase from './pages/KnowledgeBase';
 import ElectionTimeline from './pages/ElectionTimeline';
 import Candidates from './pages/Candidates';
+import CandidateComparison from './pages/CandidateComparison';
 
 function App() {
   return (
     <AccessibilityProvider>
-      <AuthProvider>
+      <CompareProvider>
+        <AuthProvider>
         <Router>
           <div className="min-h-screen flex flex-col bg-slate-50 transition-colors duration-200">
             <Navbar />
@@ -26,12 +30,15 @@ function App() {
                 <Route path="/knowledge" element={<KnowledgeBase />} />
                 <Route path="/timeline/:id" element={<ElectionTimeline />} />
                 <Route path="/candidates" element={<Candidates />} />
+                <Route path="/compare" element={<CandidateComparison />} />
               </Routes>
             </main>
-            <Chatbot /> {/* Added Chatbot here */}
+            <Chatbot />
+            <AccessibilityToolbar />
           </div>
         </Router>
       </AuthProvider>
+      </CompareProvider>
     </AccessibilityProvider>
   );
 }

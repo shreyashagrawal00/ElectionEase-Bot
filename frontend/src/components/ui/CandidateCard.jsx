@@ -1,12 +1,19 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { User, Briefcase, Target, ChevronDown, ChevronUp } from 'lucide-react';
+import { User, Briefcase, Target, ChevronDown, ChevronUp, Bookmark } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { useAuth } from '../../context/AuthContext';
+import { useCompare } from '../../context/CompareContext';
 import Card from './Card';
 
 const CandidateCard = ({ candidate }) => {
   const { t, i18n } = useTranslation();
+  const { user, toggleCandidate } = useAuth();
+  const { selectedCandidates, toggleCompare } = useCompare();
   const [showPlatform, setShowPlatform] = useState(false);
+
+  const isSaved = user?.savedCandidates?.some(c => c.name === candidate.name && c.party === candidate.party);
+  const isComparing = selectedCandidates?.some(c => c.name === candidate.name && c.party === candidate.party);
 
   const getLocalized = (field) => {
     if (!field) return '';
@@ -29,6 +36,32 @@ const CandidateCard = ({ candidate }) => {
       {/* Header with Background Pattern */}
       <div className="h-24 bg-slate-50 relative overflow-hidden flex items-center justify-center">
         <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#4f46e5_1px,transparent_1px)] [background-size:16px_16px]"></div>
+        
+        {/* Bookmark Button */}
+        <button 
+          onClick={() => toggleCandidate(candidate)}
+          className={`absolute top-3 right-3 p-2 rounded-xl border backdrop-blur-md transition-all duration-300 z-20 ${
+            isSaved 
+              ? 'bg-primary-600 border-primary-700 text-white shadow-lg shadow-primary-200' 
+              : 'bg-white/80 border-slate-200 text-slate-400 hover:text-primary-600 hover:border-primary-100 shadow-sm'
+          }`}
+        >
+          <Bookmark className={`w-4 h-4 ${isSaved ? 'fill-current' : ''}`} />
+        </button>
+
+        {/* Compare Button */}
+        <button 
+          onClick={() => toggleCompare(candidate)}
+          className={`absolute top-3 left-3 px-3 py-1.5 rounded-xl border backdrop-blur-md transition-all duration-300 z-20 flex items-center space-x-1.5 ${
+            isComparing 
+              ? 'bg-indigo-600 border-indigo-700 text-white shadow-lg shadow-indigo-200' 
+              : 'bg-white/80 border-slate-200 text-slate-400 hover:text-indigo-600 hover:border-indigo-100 shadow-sm'
+          }`}
+        >
+          <span className="text-[9px] font-black uppercase tracking-tighter">{t('compare')}</span>
+          {isComparing && <div className="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></div>}
+        </button>
+
         <div className="w-16 h-16 rounded-full bg-white shadow-lg flex items-center justify-center z-10 border-4 border-white">
           <User className="w-8 h-8 text-primary-600" />
         </div>

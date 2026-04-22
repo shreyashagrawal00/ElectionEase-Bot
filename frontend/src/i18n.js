@@ -57,7 +57,14 @@ const resources = {
       "no_candidates": "No candidates found matching your criteria.",
       "view_platform": "Platform Highlights",
       "party": "Party",
-      "bio": "Biography"
+      "bio": "Biography",
+      "compare": "Compare",
+      "add_to_compare": "Add to Compare",
+      "remove_from_compare": "Remove",
+      "compare_selection_full": "Comparison limit reached (max 2)",
+      "start_comparison": "Start Comparison",
+      "selection_empty": "Select up to 2 candidates to compare",
+      "vs": "VERSUS"
     }
   },
   hi: {
@@ -114,7 +121,14 @@ const resources = {
       "no_candidates": "आपके मानदंड से मेल खाने वाला कोई उम्मीदवार नहीं मिला।",
       "view_platform": "नीति की मुख्य विशेषताएं",
       "party": "पार्टी",
-      "bio": "जीवनी"
+      "bio": "जीवनी",
+      "compare": "तुलना करें",
+      "add_to_compare": "तुलना में जोड़ें",
+      "remove_from_compare": "हटाएं",
+      "compare_selection_full": "तुलना की सीमा पूरी हो गई (अधिकतम 2)",
+      "start_comparison": "तुलना शुरू करें",
+      "selection_empty": "तुलना करने के लिए 2 उम्मीदवार चुनें",
+      "vs": "बनाम"
     }
   },
   mr: {
@@ -171,7 +185,14 @@ const resources = {
       "no_candidates": "तुमच्या निकषांशी जुळणारा कोणताही उमेदवार सापडला नाही.",
       "view_platform": "धोरणाची ठळक वैशिष्ट्ये",
       "party": "पक्ष",
-      "bio": "चरित्र"
+      "bio": "चरित्र",
+      "compare": "तुलना करा",
+      "add_to_compare": "तुलना करा",
+      "remove_from_compare": "काढून टाका",
+      "compare_selection_full": "तुलना मर्यादा पूर्ण झाली (जास्तीत जास्त 2)",
+      "start_comparison": "तुलना सुरू करा",
+      "selection_empty": "तुलना करण्यासाठी 2 उमेदवार निवडा",
+      "vs": "विरोधात"
     }
   }
 };
