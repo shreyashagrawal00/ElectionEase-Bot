@@ -57,7 +57,7 @@ const Candidates = () => {
   });
 
   return (
-    <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+    <div className="max-w-7xl mx-auto py-20 px-4 sm:px-6 lg:px-8">
       {/* Header */}
       <div className="mb-12 text-center">
         <motion.div
@@ -76,7 +76,7 @@ const Candidates = () => {
       </div>
 
       {/* Filters Bar */}
-      <Card className="p-4 mb-12 bg-white/50 backdrop-blur-sm border-slate-200">
+      <Card className="p-8 mb-16 bg-white/50 backdrop-blur-sm border-slate-200 shadow-xl rounded-[2.5rem]">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div className="md:col-span-2 relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
@@ -142,7 +142,7 @@ const Candidates = () => {
           ) : (
             <motion.div 
               layout
-              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10"
             >
               <AnimatePresence mode='popLayout'>
                 {filteredCandidates.map(candidate => (

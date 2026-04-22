@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import Card from '../components/ui/Card';
 import Button from '../components/ui/Button';
 import axios from 'axios';
-import { CheckCircle, Circle, MapPin, Search, UserCheck, Filter, Calendar } from 'lucide-react';
+import { CheckCircle, Circle, MapPin, Search, UserCheck, Filter, Calendar, LayoutDashboard } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 
@@ -93,10 +93,12 @@ const Dashboard = () => {
         </div>
       </div>
 
-      <VoterStats />
+      <div className="mb-20">
+        <VoterStats />
+      </div>
 
       {/* Interactive Map & Context Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16 items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 mb-24 items-start">
         <motion.div 
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -147,8 +149,7 @@ const Dashboard = () => {
           </div>
         </motion.div>
 
-        <div className="flex flex-col gap-8 h-full justify-between">
-           <VoterStats />
+        <div className="flex flex-col gap-10 h-full">
            {/* Step Progress Summary Card */}
            <Card className="p-8 bg-slate-900 border-slate-800 text-white rounded-[2rem] shadow-2xl relative overflow-hidden group">
               <div className="absolute -top-24 -right-24 w-64 h-64 bg-primary-500/20 rounded-full blur-3xl group-hover:bg-primary-500/30 transition-all duration-700"></div>

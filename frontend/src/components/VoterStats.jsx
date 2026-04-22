@@ -12,7 +12,7 @@ const VoterStats = () => {
   ];
 
   return (
-    <div className="grid gap-4 sm:grid-cols-2">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
       {stats.map((stat, idx) => {
         const Icon = stat.icon;
         return (
@@ -22,7 +22,7 @@ const VoterStats = () => {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: idx * 0.1 }}
           >
-            <Card className="flex items-center p-6 bg-white transition-all hover:scale-105">
+          <Card className="flex items-center p-8 bg-white transition-all duration-300 hover:scale-[1.03] hover:shadow-2xl border-slate-100/50">
               <div className={`p-4 rounded-2xl mr-4 ${stat.color} shadow-sm`}>
                 <Icon className="w-6 h-6" />
               </div>
