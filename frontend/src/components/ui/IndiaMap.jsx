@@ -7,7 +7,11 @@ const IndiaMap = ({ selectedState, onSelectState }) => {
   const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0 });
 
   const handleMouseMove = (e) => {
-    setTooltipPos({ x: e.clientX, y: e.clientY });
+    setTooltipPos({ 
+      x: e.clientX, 
+      y: e.clientY,
+      nearTop: e.clientY < 130 
+    });
   };
 
   return (
@@ -52,19 +56,22 @@ const IndiaMap = ({ selectedState, onSelectState }) => {
       <AnimatePresence>
         {hoveredState && (
           <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.8 }}
+            initial={{ opacity: 0, scale: 0.9, y: 10 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.9, y: 10 }}
             style={{ 
               position: 'fixed', 
-              left: tooltipPos.x + 15, 
-              top: tooltipPos.y - 40,
+              left: tooltipPos.x,
+              top: tooltipPos.nearTop ? tooltipPos.y + 25 : tooltipPos.y - 85,
+              transform: 'translateX(-50%)',
               pointerEvents: 'none'
             }}
-            className="z-[100] px-4 py-2 bg-slate-900 border border-slate-700 text-white rounded-xl shadow-2xl text-sm font-bold flex flex-col pointer-events-none"
+            className="z-[100] px-6 py-4 bg-[#0f172a] border border-white text-white rounded-[1.25rem] shadow-2xl flex flex-col items-start pointer-events-none min-w-[140px]"
           >
-            <span className="whitespace-nowrap">{hoveredState}</span>
-            <span className="text-[10px] uppercase tracking-widest text-slate-400 font-medium mt-0.5">Click to focus</span>
+            <span className="whitespace-nowrap text-lg font-black tracking-tight">{hoveredState}</span>
+            <span className="text-[10px] uppercase tracking-widest text-[#fb923c] font-black mt-1.5">
+              CLICK TO FOCUS
+            </span>
           </motion.div>
         )}
       </AnimatePresence>

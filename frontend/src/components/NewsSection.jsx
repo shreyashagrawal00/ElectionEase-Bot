@@ -47,7 +47,7 @@ const NewsSection = ({ stateFilter }) => {
         {articles.length === 0 ? (
           <p className="col-span-full text-center text-slate-400 italic py-8">No recent election news found.</p>
         ) : (
-          articles.map((article, idx) => (
+          articles.slice(0, 6).map((article, idx) => (
             <motion.div
               key={idx}
               initial={{ opacity: 0, y: 20 }}

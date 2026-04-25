@@ -93,6 +93,28 @@ const Dashboard = () => {
            </div>
         </div>
       </div>
+      
+      {/* Voter Readiness Steps Grid */}
+      <div className="grid gap-6 md:grid-cols-3 mb-12">
+        {steps.map((step, idx) => {
+          const Icon = step.icon;
+          const isComplete = user.progress?.[step.id];
+          return (
+            <Card key={step.id} className="p-6 relative transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+              <div className="flex items-center justify-between mb-4">
+                <div className={`p-3 rounded-xl ${isComplete ? 'bg-primary-100 text-primary-600' : 'bg-slate-100 text-slate-500'}`}>
+                  <Icon className="w-6 h-6" />
+                </div>
+                <button onClick={() => handleStepComplete(step.id, isComplete)}>
+                  {isComplete ? <CheckCircle className="w-7 h-7 text-primary-600" /> : <Circle className="w-7 h-7 text-slate-300 hover:text-slate-400" />}
+                </button>
+              </div>
+              <h3 className="text-lg font-bold text-slate-900 mb-2">Step {idx + 1}: {step.title}</h3>
+              <p className="text-slate-500 text-sm leading-relaxed">{step.desc}</p>
+            </Card>
+          );
+        })}
+      </div>
 
       <div className="mb-20">
         <VoterStats />
@@ -104,7 +126,7 @@ const Dashboard = () => {
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5 }}
-          className="glass-card p-2 rounded-[2.5rem] bg-white/40 backdrop-blur-md border-white/50 shadow-2xl overflow-hidden"
+          className="glass-card p-2 rounded-[2.5rem] bg-white/40 backdrop-blur-md border-white/50 shadow-2xl"
         >
           <div className="p-8 flex items-center justify-between border-b border-slate-200/50 mb-2">
               <div>
@@ -246,26 +268,7 @@ const Dashboard = () => {
         </motion.div>
       )}
       
-      <div className="grid gap-6 md:grid-cols-3">
-        {steps.map((step, idx) => {
-          const Icon = step.icon;
-          const isComplete = user.progress?.[step.id];
-          return (
-            <Card key={step.id} className="p-6 relative">
-              <div className="flex items-center justify-between mb-4">
-                <div className={`p-3 rounded-full ${isComplete ? 'bg-primary-100 text-primary-600' : 'bg-slate-100 text-slate-500'}`}>
-                  <Icon className="w-6 h-6" />
-                </div>
-                <button onClick={() => handleStepComplete(step.id, isComplete)}>
-                  {isComplete ? <CheckCircle className="w-7 h-7 text-primary-600" /> : <Circle className="w-7 h-7 text-slate-300 hover:text-slate-400" />}
-                </button>
-              </div>
-              <h3 className="text-lg font-semibold text-slate-900 mb-2">Step {idx + 1}: {step.title}</h3>
-              <p className="text-slate-500 text-sm">{step.desc}</p>
-            </Card>
-          );
-        })}
-      </div>
+
 
       <div className="mt-16">
         <h2 className="text-3xl font-bold text-slate-900 mb-8 tracking-tight">{t('upcoming_elections')}</h2>
