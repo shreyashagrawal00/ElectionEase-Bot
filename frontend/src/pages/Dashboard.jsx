@@ -21,6 +21,8 @@ const Dashboard = () => {
   const [elections, setElections] = useState([]);
   const [selectedState, setSelectedState] = useState('');
   const [selectedDistrict, setSelectedDistrict] = useState('');
+  const [stateHistory, setStateHistory] = useState(null);
+  const [historyLoading, setHistoryLoading] = useState(false);
 
   const states = ['Maharashtra', 'Uttar Pradesh', 'Delhi', 'Karnataka']; // Example list
 
@@ -42,6 +44,25 @@ const Dashboard = () => {
     };
     fetchElections();
   }, [selectedState, selectedDistrict]);
+
+  useEffect(() => {
+    const fetchHistory = async () => {
+      if (!selectedState) {
+        setStateHistory(null);
+        return;
+      }
+      setHistoryLoading(true);
+      try {
+        const res = await axios.get(`http://127.0.0.1:5000/api/elections/history/${encodeURIComponent(selectedState)}`);
+        setStateHistory(res.data);
+      } catch (err) {
+        console.error('Failed to fetch state history', err);
+      } finally {
+        setHistoryLoading(false);
+      }
+    };
+    fetchHistory();
+  }, [selectedState]);
 
   if (loading || !user) return <div className="text-center p-8">Loading...</div>;
 
@@ -137,7 +158,7 @@ const Dashboard = () => {
                 key={selectedState}
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                className={`px-6 py-2 rounded-2xl text-sm font-bold border transition-all duration-500 shadow-sm ${selectedState ? 'bg-primary-600 border-primary-700 text-white shadow-primary-200' : 'bg-white border-slate-200 text-slate-500'}`}
+                className={`px-6 py-2 rounded-2xl text-sm font-bold border transition-all duration-500 shadow-sm ${selectedState ? 'bg-primary-600 border-primary-700 text-slate-50 shadow-primary-200' : 'bg-surface border-slate-200 text-slate-500'}`}
               >
                   {selectedState ? (
                     <span className="flex items-center">
@@ -157,7 +178,7 @@ const Dashboard = () => {
                   <button
                     key={s}
                     onClick={() => setSelectedState(s)}
-                    className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${selectedState === s ? 'bg-primary-600 text-white shadow-lg' : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'}`}
+                    className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${selectedState === s ? 'bg-primary-600 text-slate-50 shadow-lg' : 'bg-surface text-slate-600 hover:bg-slate-100 border border-slate-200'}`}
                   >
                     {s}
                   </button>
@@ -170,6 +191,43 @@ const Dashboard = () => {
                 </button>
              </div>
           </div>
+          
+          {/* Historical Data Section */}
+          {selectedState && (
+            <div className="p-6 border-t border-slate-200/50 bg-slate-50/50 rounded-b-[2.5rem]">
+              <h3 className="text-sm font-black text-slate-800 uppercase tracking-widest mb-4 flex items-center">
+                <Search className="w-4 h-4 mr-2 text-primary-500" />
+                Historical Records ({selectedState})
+              </h3>
+              {historyLoading ? (
+                <div className="animate-pulse space-y-3">
+                   <div className="h-4 bg-slate-200 rounded w-1/2"></div>
+                   <div className="h-4 bg-slate-200 rounded w-1/3"></div>
+                   <div className="h-4 bg-slate-200 rounded w-2/3"></div>
+                </div>
+              ) : stateHistory && stateHistory.length > 0 ? (
+                <div className="space-y-4 max-h-64 overflow-y-auto pr-2 custom-scrollbar">
+                  {stateHistory.map((historyItem, idx) => (
+                    <div key={idx} className="bg-surface p-4 rounded-xl border border-slate-100 shadow-sm hover:border-primary-300 transition-colors">
+                      <h4 className="font-bold text-slate-700 mb-3">{historyItem.electionCycle}</h4>
+                      <ul className="space-y-2">
+                        {historyItem.resources.map((res, i) => (
+                          <li key={i}>
+                            <a href={res.url} target="_blank" rel="noopener noreferrer" className="text-primary-600 hover:text-primary-800 text-xs flex items-start font-medium group">
+                              <span className="w-1.5 h-1.5 bg-primary-400 rounded-full mr-2 mt-1 flex-shrink-0 group-hover:scale-125 transition-transform"></span>
+                              <span className="group-hover:underline underline-offset-2">{res.label}</span>
+                            </a>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-xs text-slate-500 italic">No historical data found for {selectedState}.</p>
+              )}
+            </div>
+          )}
         </motion.div>
 
         <div className="flex flex-col gap-10 h-full">

@@ -1,4 +1,75 @@
 const Election = require('../models/Election');
+const axios = require('axios');
+const cheerio = require('cheerio');
+
+// Simple in-memory cache to avoid rate limiting
+const historyCache = new Map();
+const CACHE_DURATION = 1000 * 60 * 60 * 24; // 24 hours
+
+exports.getStateHistory = async (req, res) => {
+  try {
+    const { stateName } = req.params;
+    
+    // Check cache
+    if (historyCache.has(stateName)) {
+      const cached = historyCache.get(stateName);
+      if (Date.now() - cached.timestamp < CACHE_DURATION) {
+        return res.json(cached.data);
+      }
+    }
+
+    const url = `https://www.myneta.info/state_assembly.php?state=${encodeURIComponent(stateName)}`;
+    const response = await axios.get(url);
+    const html = response.data;
+    const $ = cheerio.load(html);
+
+    const historyData = [];
+
+    $('h4').each((i, el) => {
+      const yearTitle = $(el).text().trim();
+      const links = [];
+      
+      let nextEl = $(el).next();
+      while(nextEl.length && nextEl[0].name !== 'h4' && nextEl[0].name !== 'h3') {
+        nextEl.find('a').each((j, linkEl) => {
+          const href = $(linkEl).attr('href');
+          const text = $(linkEl).text().trim();
+          if (href && text && !href.includes('myneta.info/#') && !href.includes('translate.google')) {
+             links.push({ label: text, url: href });
+          }
+        });
+        nextEl = nextEl.next();
+      }
+
+      // Filter duplicates
+      const uniqueLinks = [];
+      const seenUrls = new Set();
+      links.forEach(l => {
+        if (!seenUrls.has(l.url)) {
+          seenUrls.add(l.url);
+          uniqueLinks.push(l);
+        }
+      });
+
+      if (yearTitle && uniqueLinks.length > 0) {
+        historyData.push({
+          electionCycle: yearTitle,
+          resources: uniqueLinks
+        });
+      }
+    });
+
+    historyCache.set(stateName, {
+      timestamp: Date.now(),
+      data: historyData
+    });
+
+    res.json(historyData);
+  } catch (err) {
+    console.error('Error fetching state history:', err.message);
+    res.status(500).json({ error: 'Failed to fetch historical data from MyNeta.' });
+  }
+};
 
 exports.getElections = async (req, res) => {
   try {
