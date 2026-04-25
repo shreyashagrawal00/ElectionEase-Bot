@@ -4,6 +4,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Mail, Lock, User, LogIn, UserPlus, ArrowRight, ShieldCheck, Eye, EyeOff } from 'lucide-react';
 import Button from '../components/ui/Button';
+import { useTranslation } from 'react-i18next';
 
 const InputField = ({ icon: Icon, type, name, placeholder, onChange, required, showToggle, onToggle, isVisible }) => (
   <div className="relative group">

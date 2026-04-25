@@ -19,11 +19,11 @@ const Home = () => {
         transition={{ duration: 0.8, ease: "easeOut" }}
         className="text-center max-w-4xl"
       >
-        <h1 className="text-6xl tracking-tight font-black text-slate-900 sm:text-7xl md:text-8xl mb-8">
+        <h1 className="text-4xl sm:text-6xl md:text-8xl tracking-tight font-black text-slate-900 mb-8">
           <span className="block">{t('welcome')}</span>
           <span className="block premium-gradient bg-clip-text text-transparent pb-2">{t('brand_name') || 'ElectionEase'}</span>
         </h1>
-        <p className="mt-8 text-xl md:text-2xl text-slate-500 max-w-2xl mx-auto leading-relaxed">
+        <p className="mt-8 text-xl md:text-2xl text-slate-700 max-w-2xl mx-auto leading-relaxed font-medium">
           {t('subtitle')}
         </p>
         

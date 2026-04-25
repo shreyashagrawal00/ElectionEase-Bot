@@ -37,6 +37,7 @@ export default {
           700: 'var(--slate-700)',
           800: 'var(--slate-800)',
           900: 'var(--slate-900)',
+          950: 'var(--slate-950)',
         },
         surface: 'var(--surface)',
         dark: {

@@ -88,20 +88,20 @@ const Dashboard = () => {
     <div className="max-w-6xl mx-auto py-12 px-4 sm:px-6">
       <div className="flex flex-col lg:flex-row lg:items-center justify-between mb-12 gap-8">
         <div>
-          <h1 className="text-4xl font-extrabold text-slate-900 mb-3 tracking-tight">
+          <h1 className="text-4xl font-black text-slate-900 mb-3 tracking-tight">
             {t('dashboard_title', { name: user.name })}
           </h1>
-          <p className="text-slate-500 text-lg max-w-xl">{t('subtitle')}</p>
+          <p className="text-slate-600 text-lg max-w-xl font-medium">{t('subtitle')}</p>
         </div>
         
         <div className="glass-card p-6 rounded-3xl flex-1 max-w-md">
            <div className="flex justify-between items-end mb-3">
               <div>
-                <span className="text-sm font-bold uppercase tracking-wider text-slate-400 block mb-1">{t('readiness')}</span>
-                <span className="text-4xl font-extrabold text-primary-600 text-glow">{progressPercentage}%</span>
+                <span className="text-sm font-black uppercase tracking-wider text-slate-600 block mb-1">{t('readiness')}</span>
+                <span className="text-4xl font-black text-primary-600 text-glow">{progressPercentage}%</span>
               </div>
               <div className="text-right">
-                <span className="text-sm font-semibold text-slate-500">{completedCount} of {steps.length} Steps</span>
+                <span className="text-sm font-bold text-slate-600">{completedCount} of {steps.length} Steps</span>
               </div>
            </div>
            <div className="w-full bg-slate-100 rounded-full h-4 overflow-hidden p-1 shadow-inner border border-slate-200/50">

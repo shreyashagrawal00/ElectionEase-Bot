@@ -20,13 +20,13 @@ const CandidateComparison = () => {
     if (selectedCandidates.length < 2) {
         return (
             <div className="max-w-4xl mx-auto py-24 px-4 text-center">
-                <div className="p-12 glass-card rounded-[3.5rem] border-dashed border-2 border-slate-200">
-                    <div className="w-20 h-20 bg-slate-100/50 rounded-full flex items-center justify-center mx-auto mb-6">
-                        <Info className="w-10 h-10 text-slate-300" />
+                <div className="p-6 md:p-12 glass-card rounded-[2rem] md:rounded-[3.5rem] border-dashed border-2 border-slate-200">
+                    <div className="w-16 h-16 md:w-20 md:h-20 bg-slate-100/50 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <Info className="w-8 h-8 md:w-10 md:h-10 text-slate-300" />
                     </div>
-                    <h2 className="text-3xl font-black text-slate-900 mb-4 tracking-tight">{t('selection_empty')}</h2>
-                    <p className="text-slate-500 text-lg mb-8 max-w-md mx-auto">Choose two candidates from the Research Center to unlock the side-by-side comparison engine.</p>
-                    <Button onClick={() => navigate('/candidates')} className="px-12 py-4 rounded-2xl shadow-xl hover:shadow-primary-100 transition-all">
+                    <h1 className="text-3xl md:text-5xl font-black text-slate-900 mb-4 tracking-tight">{t('selection_empty')}</h1>
+                    <p className="text-slate-500 text-base md:text-lg mb-8 max-w-md mx-auto">Choose two candidates from the Research Center to unlock the side-by-side comparison engine.</p>
+                    <Button onClick={() => navigate('/candidates')} className="w-full md:w-auto px-12 py-4 rounded-2xl shadow-xl hover:shadow-primary-100 transition-all">
                         Open Research Center
                     </Button>
                 </div>
@@ -108,13 +108,13 @@ const CandidateComparison = () => {
 
 const ComparisonRow = ({ label, val1, val2, isItalic }) => (
     <div className="grid grid-cols-1 lg:grid-cols-3 items-stretch">
-        <div className="p-8 bg-slate-100/50 lg:border-r border-slate-100 flex items-center">
+        <div className="p-4 lg:p-8 bg-slate-100/50 lg:border-r border-slate-100 flex items-center">
             <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">{label}</span>
         </div>
-        <div className="p-8 border-r border-slate-100">
+        <div className="p-6 lg:p-8 border-b lg:border-b-0 lg:border-r border-slate-100">
             <div className={`text-slate-700 font-medium leading-relaxed ${isItalic ? 'italic text-sm' : ''}`}>{val1}</div>
         </div>
-        <div className="p-8">
+        <div className="p-6 lg:p-8">
             <div className={`text-slate-700 font-medium leading-relaxed ${isItalic ? 'italic text-sm' : ''}`}>{val2}</div>
         </div>
     </div>
