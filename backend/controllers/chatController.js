@@ -11,7 +11,8 @@ exports.getChatResponse = async (req, res) => {
 
   try {
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    console.log('Initializing Gemini with model: gemini-2.5-flash');
+    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
     const { language, location } = context || { language: 'en' };
     const locationInfo = location 
@@ -28,9 +29,10 @@ exports.getChatResponse = async (req, res) => {
       Guidelines:
       1. Stay non-political and unbiased.
       2. If you don't know the specific deadline for a region, encourage the user to check the official state election commission website.
-      3. Be concise and friendly.
-      4. Support multiple languages if the user explicitly asks for a different one, but default to ${language}.
-      5. Use the provided location context to be more helpful with local queries if applicable.
+      3. Be EXTREMELY concise, summarized, and precise. Use bullet points and bold text where appropriate. Keep answers under 3 sentences if possible.
+      4. At the VERY END of your response, you MUST provide exactly 3 short follow-up questions the user could ask next. Separate each question using the exact string "|||". For example: Your answer here. |||How do I register?|||Where is my polling booth?|||What ID is needed?
+      5. Support multiple languages if the user explicitly asks for a different one, but default to ${language}.
+      6. Use the provided location context to be more helpful with local queries if applicable.
     `;
 
     const result = await model.generateContent([systemPrompt, message]);

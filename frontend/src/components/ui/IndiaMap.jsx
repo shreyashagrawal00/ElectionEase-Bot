@@ -66,10 +66,10 @@ const IndiaMap = ({ selectedState, onSelectState }) => {
               transform: 'translateX(-50%)',
               pointerEvents: 'none'
             }}
-            className="z-[100] px-6 py-4 bg-[#0f172a] border border-white text-white rounded-[1.25rem] shadow-2xl flex flex-col items-start pointer-events-none min-w-[140px]"
+            className="z-[100] px-6 py-4 bg-white border border-slate-200 text-slate-800 rounded-[1.25rem] shadow-xl flex flex-col items-start pointer-events-none min-w-[140px]"
           >
             <span className="whitespace-nowrap text-lg font-black tracking-tight">{hoveredState}</span>
-            <span className="text-[10px] uppercase tracking-widest text-[#fb923c] font-black mt-1.5">
+            <span className="text-[10px] uppercase tracking-widest text-primary-600 font-bold mt-1.5">
               CLICK TO FOCUS
             </span>
           </motion.div>

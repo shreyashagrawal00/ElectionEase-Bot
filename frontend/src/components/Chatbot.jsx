@@ -3,6 +3,15 @@ import { MessageSquare, X, Send, Bot, User, Loader2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 
+const renderMarkdown = (text) => {
+  if (!text) return { __html: '' };
+  let html = text
+    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\n/g, '<br />')
+    .replace(/^\* (.*)/gm, '&bull; $1'); // Basic bullet point handling
+  return { __html: html };
+};
+
 const Chatbot = () => {
   const { t, i18n } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
@@ -13,7 +22,32 @@ const Chatbot = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [location, setLocation] = useState(null);
   const [locationError, setLocationError] = useState(null);
+  const [showTooltip, setShowTooltip] = useState(false);
   const scrollRef = useRef(null);
+
+  useEffect(() => {
+    let intervalId;
+    let timeoutId;
+
+    if (!isOpen) {
+      // Set interval for every 40 seconds
+      intervalId = setInterval(() => {
+        setShowTooltip(true);
+        
+        // Hide it after 8 seconds
+        timeoutId = setTimeout(() => {
+          setShowTooltip(false);
+        }, 8000);
+      }, 40000);
+    } else {
+      setShowTooltip(false);
+    }
+
+    return () => {
+      clearInterval(intervalId);
+      clearTimeout(timeoutId);
+    };
+  }, [isOpen]);
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -69,7 +103,17 @@ const Chatbot = () => {
         }
       });
       
-      const assistantMessage = { role: 'assistant', content: res.data.response };
+      const rawContent = res.data.response;
+      let content = rawContent;
+      let suggestions = [];
+
+      if (rawContent.includes('|||')) {
+        const parts = rawContent.split('|||');
+        content = parts[0].trim();
+        suggestions = parts.slice(1).map(s => s.trim()).filter(s => s.length > 0).slice(0, 3);
+      }
+      
+      const assistantMessage = { role: 'assistant', content: content, suggestions: suggestions };
       setMessages(prev => [...prev, assistantMessage]);
     } catch (err) {
       console.error(err);
@@ -84,12 +128,24 @@ const Chatbot = () => {
     <div className="fixed bottom-6 right-6 z-50">
       {/* Chat toggle button */}
       {!isOpen && (
-        <button 
-          onClick={() => setIsOpen(true)}
-          className="bg-primary-600 hover:bg-primary-700 text-white p-4 rounded-full shadow-lg transition-all duration-300 transform hover:scale-110 flex items-center justify-center"
+        <div 
+          className="relative flex items-center"
+          onMouseEnter={() => setShowTooltip(true)}
+          onMouseLeave={() => setShowTooltip(false)}
         >
-          <MessageSquare className="w-6 h-6" />
-        </button>
+          {showTooltip && (
+            <div className="absolute right-full mr-4 bg-white text-slate-800 px-5 py-3 rounded-2xl shadow-xl border border-slate-200 text-sm font-medium whitespace-nowrap animate-in fade-in slide-in-from-right-4 duration-500">
+              Ask any question about election! 🗳️
+              <div className="absolute top-1/2 -right-2 -translate-y-1/2 border-8 border-transparent border-l-white"></div>
+            </div>
+          )}
+          <button 
+            onClick={() => { setIsOpen(true); setShowTooltip(false); }}
+            className="bg-primary-600 hover:bg-primary-700 text-white p-5 rounded-full shadow-2xl transition-all duration-300 transform hover:scale-110 flex items-center justify-center relative z-10"
+          >
+            <MessageSquare className="w-8 h-8" />
+          </button>
+        </div>
       )}
 
       {/* Chat window */}
@@ -114,20 +170,39 @@ const Chatbot = () => {
           {/* Messages */}
           <div ref={scrollRef} className="flex-1 overflow-y-auto p-4 space-y-4 bg-slate-50">
             {messages.map((msg, idx) => (
-              <div key={idx} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                <div className={`max-w-[80%] p-3 rounded-2xl shadow-sm ${
-                  msg.role === 'user' 
-                    ? 'bg-primary-600 text-white rounded-tr-none' 
-                    : 'bg-white text-slate-800 rounded-tl-none border border-slate-100'
-                }`}>
-                  <div className="flex items-center mb-1">
-                    {msg.role === 'assistant' ? <Bot className="w-3 h-3 mr-1 opacity-50" /> : <User className="w-3 h-3 mr-1 opacity-50" />}
-                    <span className="text-[10px] uppercase font-bold opacity-50">
-                      {msg.role === 'assistant' ? 'Assistant' : 'You'}
-                    </span>
+              <div key={idx} className={`flex flex-col ${msg.role === 'user' ? 'items-end' : 'items-start'} mb-4`}>
+                <div className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'} w-full`}>
+                  <div className={`max-w-[80%] p-3 rounded-2xl shadow-sm ${
+                    msg.role === 'user' 
+                      ? 'bg-primary-600 text-white rounded-tr-none' 
+                      : 'bg-white text-slate-800 rounded-tl-none border border-slate-100'
+                  }`}>
+                    <div className="flex items-center mb-1">
+                      {msg.role === 'assistant' ? <Bot className="w-3 h-3 mr-1 opacity-50" /> : <User className="w-3 h-3 mr-1 opacity-50" />}
+                      <span className="text-[10px] uppercase font-bold opacity-50">
+                        {msg.role === 'assistant' ? 'Assistant' : 'You'}
+                      </span>
+                    </div>
+                    <p 
+                      className="text-sm leading-relaxed whitespace-pre-wrap"
+                      dangerouslySetInnerHTML={renderMarkdown(msg.content)}
+                    />
                   </div>
-                  <p className="text-sm leading-relaxed whitespace-pre-wrap">{msg.content}</p>
                 </div>
+                
+                {msg.suggestions && msg.suggestions.length > 0 && idx === messages.length - 1 && !isLoading && (
+                  <div className="flex flex-wrap gap-2 mt-2 ml-2 max-w-[90%]">
+                    {msg.suggestions.map((q, i) => (
+                      <button 
+                        key={i} 
+                        onClick={() => handleSend(q)}
+                        className="text-[10px] font-medium bg-white border border-slate-200 text-slate-600 hover:border-primary-500 hover:text-primary-600 px-3 py-1.5 rounded-full transition-all text-left"
+                      >
+                        {q}
+                      </button>
+                    ))}
+                  </div>
+                )}
               </div>
             ))}
             {isLoading && (

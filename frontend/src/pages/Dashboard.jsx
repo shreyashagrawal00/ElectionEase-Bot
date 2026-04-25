@@ -206,12 +206,12 @@ const Dashboard = () => {
                 <h4 className="text-slate-400 text-xs font-black uppercase tracking-[0.2em] mb-2">Civic Matching Engine</h4>
                 <h3 className="text-2xl font-black mb-4 leading-tight">Which candidate aligns with your values?</h3>
                 <p className="text-slate-400 text-sm mb-8 leading-relaxed">Take our values assessment to unlock personalized match percentages across all candidate profiles.</p>
-                <Button 
+                <button 
                   onClick={() => navigate('/match')} 
                   className="w-full bg-white text-indigo-900 hover:bg-slate-100 font-black py-4 rounded-2xl shadow-xl transition-all hover:scale-[1.02]"
                 >
                    {quizResults ? "Retake Assessment" : "Start Matching →"}
-                </Button>
+                </button>
               </div>
            </Card>
 
