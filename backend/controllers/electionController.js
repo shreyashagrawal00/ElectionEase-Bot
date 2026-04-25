@@ -19,45 +19,68 @@ exports.getStateHistory = async (req, res) => {
     }
 
     const url = `https://www.myneta.info/state_assembly.php?state=${encodeURIComponent(stateName)}`;
-    const response = await axios.get(url);
+    const response = await axios.get(url, {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+      }
+    });
     const html = response.data;
     const $ = cheerio.load(html);
 
     const historyData = [];
+    let currentCycle = null;
+    let currentLinks = [];
 
-    $('h4').each((i, el) => {
-      const yearTitle = $(el).text().trim();
-      const links = [];
-      
-      let nextEl = $(el).next();
-      while(nextEl.length && nextEl[0].name !== 'h4' && nextEl[0].name !== 'h3') {
-        nextEl.find('a').each((j, linkEl) => {
-          const href = $(linkEl).attr('href');
-          const text = $(linkEl).text().trim();
-          if (href && text && !href.includes('myneta.info/#') && !href.includes('translate.google')) {
-             links.push({ label: text, url: href });
-          }
-        });
-        nextEl = nextEl.next();
+    // Traverse all elements to associate links with the nearest preceding header
+    $('*').each((i, el) => {
+      const tagName = el.name.toUpperCase();
+      const text = $(el).text().trim();
+
+      // Detect election cycle headers (H3 or H4)
+      if (['H3', 'H4'].includes(tagName) && text.includes(stateName) && /\d{4}/.test(text)) {
+        if (currentCycle && currentLinks.length > 0) {
+          historyData.push({ electionCycle: currentCycle, resources: currentLinks });
+        }
+        currentCycle = text;
+        currentLinks = [];
       }
 
-      // Filter duplicates
-      const uniqueLinks = [];
-      const seenUrls = new Set();
-      links.forEach(l => {
-        if (!seenUrls.has(l.url)) {
-          seenUrls.add(l.url);
-          uniqueLinks.push(l);
+      // Stop associating links if we hit another major section
+      if (currentCycle && tagName === 'H3' && text === 'State Assemblies') {
+        if (currentLinks.length > 0) {
+           historyData.push({ electionCycle: currentCycle, resources: currentLinks });
         }
-      });
+        currentCycle = null;
+        currentLinks = [];
+      }
 
-      if (yearTitle && uniqueLinks.length > 0) {
-        historyData.push({
-          electionCycle: yearTitle,
-          resources: uniqueLinks
-        });
+      // Detect links if inside an active cycle
+      if (currentCycle && tagName === 'A') {
+        let href = $(el).attr('href');
+        const linkText = text;
+        
+        // Filter out nav links, state links, and social links
+        if (href && linkText && 
+            !href.includes('myneta.info/#') && 
+            !href.includes('translate.google') &&
+            !href.includes('state_assembly.php') &&
+            !linkText.toLowerCase().includes('about') &&
+            !linkText.toLowerCase().includes('contact')) {
+           
+           if (!href.startsWith('http')) {
+             href = 'https://www.myneta.info/' + href.replace(/^\//, '');
+           }
+           
+           if (!currentLinks.find(l => l.url === href)) {
+             currentLinks.push({ label: linkText, url: href });
+           }
+        }
       }
     });
+
+    if (currentCycle && currentLinks.length > 0) {
+      historyData.push({ electionCycle: currentCycle, resources: currentLinks });
+    }
 
     historyCache.set(stateName, {
       timestamp: Date.now(),
@@ -68,6 +91,69 @@ exports.getStateHistory = async (req, res) => {
   } catch (err) {
     console.error('Error fetching state history:', err.message);
     res.status(500).json({ error: 'Failed to fetch historical data from MyNeta.' });
+  }
+};
+
+exports.getCandidateDetails = async (req, res) => {
+  try {
+    const { url } = req.query;
+    if (!url) return res.status(400).json({ error: 'URL is required' });
+
+    const response = await axios.get(url, {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+      }
+    });
+    const $ = cheerio.load(response.data);
+
+    const details = {
+      name: $('.candidate-name').text().trim(),
+      criminalCases: 0,
+      criminalDetails: '',
+      assets: 'N/A',
+      liabilities: 'N/A',
+      netWorth: 'N/A',
+      education: 'N/A',
+      source: url
+    };
+
+    // Scrape Criminal Cases
+    const criminalText = $('.criminal-cases').text().trim();
+    if (criminalText) {
+      const match = criminalText.match(/(\d+)/);
+      details.criminalCases = match ? parseInt(match[1]) : 0;
+      details.criminalDetails = criminalText;
+    }
+
+    // Scrape Education
+    $('div').each((i, el) => {
+      const text = $(el).text().trim();
+      if (text.includes('Education')) {
+        details.education = $(el).next().text().trim() || 'Not specified';
+      }
+    });
+
+    // Scrape Financials (Look for common MyNeta table patterns)
+    $('table tr').each((i, el) => {
+      const rowText = $(el).text().toLowerCase();
+      if (rowText.includes('total assets')) {
+        details.assets = $(el).find('td').last().text().trim();
+      }
+      if (rowText.includes('total liabilities')) {
+        details.liabilities = $(el).find('td').last().text().trim();
+      }
+    });
+
+    // Fallback for Assets/Liabilities if table structure is different
+    if (details.assets === 'N/A') {
+      const assetMatch = response.data.match(/Assets:\s*(Rs\s*[\d,]+)/i);
+      if (assetMatch) details.assets = assetMatch[1];
+    }
+
+    res.json(details);
+  } catch (err) {
+    console.error('Error scraping candidate details:', err.message);
+    res.status(500).json({ error: 'Failed to extract deep research data.' });
   }
 };
 
@@ -151,7 +237,8 @@ exports.seedElections = async (req, res) => {
               hi: 'स्थानीय समुदाय नेता और सामाजिक कार्यकर्ता।',
               mr: 'स्थानिक समुदाय नेते आणि सामाजिक कार्यकर्ते.'
             },
-            platform: ['Clean Water', 'Better Schools', 'Youth Employment']
+            platform: ['Clean Water', 'Better Schools', 'Youth Employment'],
+            researchUrl: 'https://www.myneta.info/maharashtra2019/candidate.php?candidate_id=7445'
           },
           { 
             name: 'Anjali Deshmukh', 
@@ -200,6 +287,45 @@ exports.seedElections = async (req, res) => {
         pollingStations: [
           { name: 'Commumity Center', address: 'Connaught Place, Delhi', accessibilityFeatures: ['Ramp'] }
         ]
+      },
+      {
+        title: { en: 'Uttar Pradesh Assembly Elections 2027', hi: 'उत्तर प्रदेश विधानसभा चुनाव 2027', mr: 'उत्तर प्रदेश विधानसभा निवडणूक २०२७' },
+        date: new Date('2027-03-15'),
+        locationType: 'State',
+        state: 'Uttar Pradesh',
+        steps: [{ title: { en: 'Final List', hi: 'अंतिम सूची', mr: 'अंतिम यादी' }, description: { en: 'Final candidates announced.', hi: 'अंतिम उम्मीदवारों की घोषणा।', mr: 'अंतिम उमेदवार जाहीर.' }, order: 1 }],
+        candidates: [
+          { 
+            name: 'Vikram Singh', 
+            party: 'National Party', 
+            bio: { en: 'Former civil servant.', hi: 'पूर्व सिविल सेवक।', mr: 'माजी सनदी अधिकारी.' },
+            platform: ['Infrastructure', 'Agriculture Reform'],
+            researchUrl: 'https://www.myneta.info/uttarpradesh2022/candidate.php?candidate_id=6023'
+          },
+          { 
+            name: 'Savitri Devi', 
+            party: 'Regional Front', 
+            bio: { en: 'Grassroots activist.', hi: 'जमीनी कार्यकर्ता।', mr: 'तळागाळातील कार्यकर्ता.' },
+            platform: ['Women Empowerment', 'Rural Health']
+          }
+        ],
+        pollingStations: [{ name: 'Lucknow Central School', address: 'Lucknow', accessibilityFeatures: ['Ramp'] }]
+      },
+      {
+        title: { en: 'Karnataka State Elections 2028', hi: 'कर्नाटक राज्य चुनाव 2028', mr: 'कर्नाटक राज्य निवडणूक २०२८' },
+        date: new Date('2028-05-10'),
+        locationType: 'State',
+        state: 'Karnataka',
+        steps: [{ title: { en: 'Voter List Check', hi: 'मतदाता सूची की जांच', mr: 'मतदार यादी तपासणी' }, description: { en: 'Check your status.', hi: 'अपनी स्थिति की जांच करें।', mr: 'तुमची स्थिती तपासा.' }, order: 1 }],
+        candidates: [
+          { 
+            name: 'Karthik Reddy', 
+            party: 'Alliance', 
+            bio: { en: 'Tech entrepreneur.', hi: 'टेक उद्यमी।', mr: 'तंत्रज्ञान उद्योजक.' },
+            platform: ['Digital City', 'Water Management']
+          }
+        ],
+        pollingStations: [{ name: 'Bangalore Public Hall', address: 'Bangalore', accessibilityFeatures: ['Elevator'] }]
       }
     ];
 

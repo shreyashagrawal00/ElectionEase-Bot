@@ -21,7 +21,7 @@ const CandidateComparison = () => {
         return (
             <div className="max-w-4xl mx-auto py-24 px-4 text-center">
                 <div className="p-12 glass-card rounded-[3.5rem] border-dashed border-2 border-slate-200">
-                    <div className="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <div className="w-20 h-20 bg-slate-100/50 rounded-full flex items-center justify-center mx-auto mb-6">
                         <Info className="w-10 h-10 text-slate-300" />
                     </div>
                     <h2 className="text-3xl font-black text-slate-900 mb-4 tracking-tight">{t('selection_empty')}</h2>
@@ -44,7 +44,7 @@ const CandidateComparison = () => {
                     Back to Research
                 </Button>
                 <div className="text-center">
-                    <div className="inline-flex items-center space-x-2 bg-indigo-50 text-indigo-600 px-4 py-2 rounded-full mb-4">
+                    <div className="inline-flex items-center space-x-2 bg-[var(--status-info-bg)] text-[var(--status-info-text)] px-4 py-2 rounded-full mb-4">
                         <Award className="w-4 h-4" />
                         <span className="text-[10px] font-black uppercase tracking-[0.2em]">Decision Engine 2.0</span>
                     </div>
@@ -57,7 +57,7 @@ const CandidateComparison = () => {
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 relative mb-24">
                 {/* VS Badge */}
-                <div className="hidden lg:flex absolute left-1/2 top-[120px] -translate-x-1/2 z-30 w-16 h-16 rounded-full bg-slate-900 text-white items-center justify-center font-black text-xl border-4 border-white shadow-2xl">
+                <div className="hidden lg:flex absolute left-1/2 top-[120px] -translate-x-1/2 z-30 w-16 h-16 rounded-full bg-slate-900 text-white items-center justify-center font-black text-xl border-4 border-surface shadow-2xl">
                     VS
                 </div>
 
@@ -82,7 +82,7 @@ const CandidateComparison = () => {
             <motion.div 
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="bg-white rounded-[3rem] shadow-2xl border border-slate-100 overflow-hidden"
+                className="bg-surface rounded-[3rem] shadow-2xl border border-slate-100 overflow-hidden"
             >
                 <div className="p-10 bg-slate-900 text-white flex items-center justify-between">
                     <div>
@@ -108,7 +108,7 @@ const CandidateComparison = () => {
 
 const ComparisonRow = ({ label, val1, val2, isItalic }) => (
     <div className="grid grid-cols-1 lg:grid-cols-3 items-stretch">
-        <div className="p-8 bg-slate-50 lg:border-r border-slate-100 flex items-center">
+        <div className="p-8 bg-slate-100/50 lg:border-r border-slate-100 flex items-center">
             <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">{label}</span>
         </div>
         <div className="p-8 border-r border-slate-100">

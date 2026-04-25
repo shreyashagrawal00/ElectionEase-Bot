@@ -10,8 +10,8 @@ const Home = () => {
   return (
     <div className="min-h-[calc(100vh-5rem)] flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8 overflow-hidden relative">
       {/* Background decoration */}
-      <div className="absolute top-0 -translate-y-24 left-1/2 -translate-x-1/2 w-[1000px] h-[500px] bg-primary-100/30 rounded-full blur-[120px] -z-10" />
-      <div className="absolute bottom-0 translate-y-24 right-0 w-[500px] h-[500px] bg-accent-100/20 rounded-full blur-[100px] -z-10" />
+      <div className="absolute top-0 -translate-y-24 left-1/2 -translate-x-1/2 w-[1000px] h-[500px] bg-primary-100/10 rounded-full blur-[120px] -z-10" />
+      <div className="absolute bottom-0 translate-y-24 right-0 w-[500px] h-[500px] bg-accent-100/10 rounded-full blur-[100px] -z-10" />
 
       <motion.div 
         initial={{ opacity: 0, y: 30 }}
@@ -57,7 +57,7 @@ const Home = () => {
             </Button>
           </Link>
           <Link to="/knowledge">
-            <Button variant="outline" className="px-10 py-4 text-xl bg-white/50 backdrop-blur-sm border-slate-200 hover:border-primary-300 font-bold">
+            <Button variant="outline" className="px-10 py-4 text-xl bg-surface/50 backdrop-blur-sm border-slate-200 hover:border-primary-300 font-bold">
               {t('browse_candidates')}
             </Button>
           </Link>

@@ -147,7 +147,7 @@ const Dashboard = () => {
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5 }}
-          className="glass-card p-2 rounded-[2.5rem] bg-white/40 backdrop-blur-md border-white/50 shadow-2xl"
+          className="glass-card p-2 rounded-[2.5rem] shadow-2xl"
         >
           <div className="p-8 flex items-center justify-between border-b border-slate-200/50 mb-2">
               <div>
@@ -172,7 +172,7 @@ const Dashboard = () => {
           </div>
           <IndiaMap selectedState={selectedState} onSelectState={setSelectedState} />
           
-          <div className="p-6 bg-slate-50/50 border-t border-slate-200/50">
+          <div className="p-6 bg-slate-100/50 border-t border-slate-200/50">
              <div className="flex flex-wrap gap-3">
                 {['Maharashtra', 'Uttar Pradesh', 'Delhi', 'Karnataka'].map(s => (
                   <button
@@ -194,7 +194,7 @@ const Dashboard = () => {
           
           {/* Historical Data Section */}
           {selectedState && (
-            <div className="p-6 border-t border-slate-200/50 bg-slate-50/50 rounded-b-[2.5rem]">
+            <div className="p-6 border-t border-slate-200/50 bg-slate-100/50 rounded-b-[2.5rem]">
               <h3 className="text-sm font-black text-slate-800 uppercase tracking-widest mb-4 flex items-center">
                 <Search className="w-4 h-4 mr-2 text-primary-500" />
                 Historical Records ({selectedState})

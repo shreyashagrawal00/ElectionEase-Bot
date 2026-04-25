@@ -21,7 +21,7 @@ const IndiaMap = ({ selectedState, onSelectState }) => {
         className="w-full h-full drop-shadow-2xl transition-all duration-700"
         onMouseMove={handleMouseMove}
       >
-        <g stroke="#cbd5e1" strokeWidth="0.5">
+        <g stroke="var(--map-stroke)" strokeWidth="0.5">
           {mapData.locations.map((loc) => {
             const isSelected = selectedState === loc.name;
             const isHovered = hoveredState === loc.name;
@@ -30,11 +30,11 @@ const IndiaMap = ({ selectedState, onSelectState }) => {
               <motion.path
                 key={loc.id}
                 d={loc.path}
-                initial={{ fill: "#f8fafc", scale: 1 }}
+                initial={{ fill: "var(--map-fill)", scale: 1 }}
                 animate={{
-                  fill: isSelected ? "#16a34a" : (isHovered ? "#dcfce7" : "#f1f5f9"),
+                  fill: isSelected ? "var(--map-selected)" : (isHovered ? "var(--map-hover)" : "var(--map-fill)"),
                   scale: isSelected ? 1.02 : 1,
-                  stroke: isSelected ? "#15803d" : "#cbd5e1",
+                  stroke: isSelected ? "var(--map-selected)" : "var(--map-stroke)",
                   strokeWidth: isSelected || isHovered ? 1.5 : 0.5,
                 }}
                 whileHover={{ 
@@ -69,7 +69,7 @@ const IndiaMap = ({ selectedState, onSelectState }) => {
             className="z-[100] px-6 py-4 bg-white border border-slate-200 text-slate-800 rounded-[1.25rem] shadow-xl flex flex-col items-start pointer-events-none min-w-[140px]"
           >
             <span className="whitespace-nowrap text-lg font-black tracking-tight">{hoveredState}</span>
-            <span className="text-[10px] uppercase tracking-widest text-primary-600 font-bold mt-1.5">
+            <span className="text-[10px] uppercase tracking-widest text-primary-500 font-bold mt-1.5">
               CLICK TO FOCUS
             </span>
           </motion.div>
@@ -79,7 +79,7 @@ const IndiaMap = ({ selectedState, onSelectState }) => {
       {/* Map Legend/Instructions Overlay */}
       <div className="absolute top-2 left-0 flex flex-col space-y-2 pointer-events-none p-4 rounded-2xl bg-white/30 backdrop-blur-md border border-white/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
         <div className="flex items-center space-x-2">
-            <div className="w-3 h-3 rounded-full bg-primary-600 shadow-sm shadow-primary-200"></div>
+            <div className="w-3 h-3 rounded-full bg-primary-500 shadow-sm shadow-primary-200"></div>
             <span className="text-[10px] font-bold text-slate-700 uppercase tracking-tighter">Active Focus</span>
         </div>
         <div className="flex items-center space-x-2">

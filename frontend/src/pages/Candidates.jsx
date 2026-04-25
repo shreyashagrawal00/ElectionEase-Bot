@@ -63,7 +63,7 @@ const Candidates = () => {
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="inline-flex items-center justify-center p-3 rounded-2xl bg-primary-100 text-primary-600 mb-6"
+          className="inline-flex items-center justify-center p-3 rounded-2xl bg-primary-100/20 text-primary-500 mb-6"
         >
           <Users className="w-8 h-8" />
         </motion.div>
@@ -76,7 +76,7 @@ const Candidates = () => {
       </div>
 
       {/* Filters Bar */}
-      <Card className="p-8 mb-16 bg-white/50 backdrop-blur-sm border-slate-200 shadow-xl rounded-[2.5rem]">
+      <Card className="p-8 mb-16 bg-surface/50 backdrop-blur-sm border-slate-200/50 shadow-xl rounded-[2.5rem]">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div className="md:col-span-2 relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
@@ -85,7 +85,7 @@ const Candidates = () => {
               placeholder={t('search_candidates')}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-primary-500 outline-none transition-all"
+              className="w-full pl-10 pr-4 py-2 bg-slate-100/50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-primary-500 outline-none transition-all"
             />
           </div>
           
@@ -94,7 +94,7 @@ const Candidates = () => {
             <select
               value={selectedState}
               onChange={(e) => setSelectedState(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-primary-500 outline-none appearance-none"
+              className="w-full pl-10 pr-4 py-2 bg-slate-100/50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-primary-500 outline-none appearance-none"
             >
               <option value="">{t('all_states')}</option>
               {states.map(s => <option key={s} value={s}>{s}</option>)}
@@ -106,7 +106,7 @@ const Candidates = () => {
             <select
               value={selectedParty}
               onChange={(e) => setSelectedParty(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-primary-500 outline-none appearance-none"
+              className="w-full pl-10 pr-4 py-2 bg-slate-100/50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-primary-500 outline-none appearance-none"
             >
               <option value="">{t('filter_party')}</option>
               {parties.map(p => <option key={p} value={p}>{p}</option>)}

@@ -16,7 +16,7 @@ const InputField = ({ icon: Icon, type, name, placeholder, onChange, required })
       required={required}
       placeholder={placeholder}
       onChange={onChange}
-      className="w-full pl-11 pr-4 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent focus:bg-white transition-all duration-200 shadow-sm"
+      className="w-full pl-11 pr-4 py-3.5 bg-slate-100/50 border border-slate-200 rounded-2xl text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent focus:bg-surface transition-all duration-200 shadow-sm"
     />
   </div>
 );
@@ -51,9 +51,9 @@ const Login = () => {
   return (
     <div className="min-h-[calc(100vh-5rem)] flex items-center justify-center py-12 px-4 relative overflow-hidden">
       {/* Background decorations */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[600px] bg-primary-100/40 rounded-full blur-[120px] -z-10" />
-      <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-accent-100/30 rounded-full blur-[100px] -z-10" />
-      <div className="absolute top-1/3 left-0 w-[300px] h-[300px] bg-indigo-100/20 rounded-full blur-[80px] -z-10" />
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[600px] bg-primary-100/10 rounded-full blur-[120px] -z-10" />
+      <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-accent-100/10 rounded-full blur-[100px] -z-10" />
+      <div className="absolute top-1/3 left-0 w-[300px] h-[300px] bg-indigo-100/10 rounded-full blur-[80px] -z-10" />
 
       <motion.div
         initial={{ opacity: 0, y: 30 }}
@@ -63,7 +63,7 @@ const Login = () => {
       >
         {/* Header badge */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center space-x-2 bg-primary-50 border border-primary-100 text-primary-700 px-4 py-2 rounded-full mb-4">
+          <div className="inline-flex items-center space-x-2 bg-[var(--status-info-bg)] border border-[var(--status-info-text)]/20 text-[var(--status-info-text)] px-4 py-2 rounded-full mb-4">
             <ShieldCheck className="w-4 h-4" />
             <span className="text-xs font-black uppercase tracking-[0.15em]">Secure Civic Portal</span>
           </div>

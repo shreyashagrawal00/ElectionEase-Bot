@@ -55,7 +55,7 @@ const KnowledgeBase = () => {
         
         <div className="grid gap-8 md:grid-cols-3">
           {docCategories.map((category, idx) => (
-            <Card key={idx} className="p-6 bg-white border-slate-100 hover:shadow-md transition-shadow">
+            <Card key={idx} className="p-6 bg-surface border-slate-100/50 hover:shadow-md transition-shadow">
               <h3 className="text-sm font-bold text-primary-600 uppercase tracking-widest mb-4">
                 {category.title}
               </h3>
@@ -63,7 +63,7 @@ const KnowledgeBase = () => {
                 {category.docs.map(doc => (
                   <li key={doc} className="flex items-start cursor-pointer" onClick={() => handleToggleDoc(doc)}>
                     <div className={`mt-0.5 mr-3 w-5 h-5 rounded border flex items-center justify-center transition-colors ${
-                      checkedDocs[doc] ? 'bg-primary-600 border-primary-600' : 'bg-white border-slate-300'
+                      checkedDocs[doc] ? 'bg-primary-600 border-primary-600' : 'bg-surface border-slate-300'
                     }`}>
                       {checkedDocs[doc] && <CheckCircle2 className="w-3.5 h-3.5 text-white" />}
                     </div>
@@ -90,9 +90,9 @@ const KnowledgeBase = () => {
 
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {election.candidates.map((cand, idx) => (
-               <Card key={idx} className="p-6 bg-white border-slate-100 group">
+               <Card key={idx} className="p-6 bg-surface border-slate-100 group">
                   <div className="flex justify-between items-start mb-4">
-                    <span className="inline-block px-3 py-1 bg-slate-100 text-slate-600 group-hover:bg-primary-100 group-hover:text-primary-700 rounded-full text-xs font-bold uppercase tracking-wide transition-colors">
+                    <span className="inline-block px-3 py-1 bg-[var(--status-info-bg)] text-[var(--status-info-text)] rounded-full text-xs font-bold uppercase tracking-wide transition-colors">
                       {cand.party}
                     </span>
                   </div>
@@ -121,7 +121,7 @@ const KnowledgeBase = () => {
           </div>
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
              {election.pollingStations.map((station, idx) => (
-                <Card key={idx} className="p-6 bg-white border-slate-100">
+                <Card key={idx} className="p-6 bg-surface border-slate-100">
                   <h3 className="text-lg font-bold text-slate-900">{station.name}</h3>
                   <div className="flex items-start mt-2 text-slate-500">
                     <MapPin className="w-4 h-4 mr-2 mt-0.5 flex-shrink-0" />

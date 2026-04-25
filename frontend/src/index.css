@@ -111,41 +111,67 @@ html.text-large { font-size: 20px; }
 
   --color-white: #ffffff;
   --surface: #ffffff;
+  
+  --glass: rgba(255, 255, 255, 0.7);
+  --glass-border: rgba(255, 255, 255, 0.4);
+  
+  --map-fill: #f8fafc;
+  --map-stroke: #cbd5e1;
+  --map-hover: #dcfce7;
+  --map-selected: #16a34a;
+
+  --status-info-bg: #e0f2fe;
+  --status-info-text: #0369a1;
+  --status-success-bg: #dcfce7;
+  --status-success-text: #15803d;
+  --status-warning-bg: #fef3c7;
+  --status-warning-text: #b45309;
 }
 
 .high-contrast {
-  /* High Contrast / Dark Mode Override Colors */
-  --primary-50: #427AB5;
-  --primary-100: #427AB5;
-  --primary-200: #1e3a8a;
-  --primary-300: #1e40af;
-  --primary-400: #1d4ed8;
-  --primary-500: #FFC85C; /* Gold Action Buttons */
+  --primary-50: #1E104E;
+  --primary-100: #1E104E;
+  --primary-200: #452E5A;
+  --primary-300: #452E5A;
+  --primary-400: #FFC85C;
+  --primary-500: #FFC85C;
   --primary-600: #FFC85C;
-  --primary-700: #FFB320;
-  --primary-800: #E69D00;
-  --primary-900: #CC8B00;
+  --primary-700: #FFC85C;
+  --primary-800: #FFC85C;
+  --primary-900: #FFC85C;
 
-  --accent-50: #452E5A;
-  --accent-100: #452E5A;
-  --accent-500: #FFC85C;
-  --accent-600: #FFB320;
-  --accent-700: #E69D00;
+  --accent-50: #1E104E;
+  --accent-100: #1E104E;
+  --accent-500: #427AB5;
+  --accent-600: #427AB5;
+  --accent-700: #427AB5;
 
-  /* Slate maps to Deep Purple Backgrounds */
   --slate-50: #1E104E;
   --slate-100: #1E104E;
-  --slate-200: #452E5A; /* Borders */
+  --slate-200: #452E5A;
   --slate-300: #452E5A;
-  --slate-400: #FFC85C; /* Muted Text */
+  --slate-400: #FFC85C;
   --slate-500: #FFC85C;
   --slate-600: #FFC85C;
   --slate-700: #FFC85C;
   --slate-800: #FFC85C;
-  --slate-900: #FFC85C; /* Solid Text */
+  --slate-900: #FFC85C;
 
-  --color-white: #1E104E;
   --surface: #1E104E;
+  --glass: rgba(30, 16, 78, 0.85);
+  --glass-border: rgba(255, 200, 92, 0.2);
+
+  --map-fill: #1E104E;
+  --map-stroke: #452E5A;
+  --map-hover: #427AB5;
+  --map-selected: #FFC85C;
+
+  --status-info-bg: #452E5A;
+  --status-info-text: #FFC85C;
+  --status-success-bg: #452E5A;
+  --status-success-text: #FFC85C;
+  --status-warning-bg: #452E5A;
+  --status-warning-text: #FFC85C;
 
   background-color: var(--slate-50) !important;
   color: var(--slate-900) !important;

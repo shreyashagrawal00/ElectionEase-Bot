@@ -14,6 +14,7 @@ import ElectionTimeline from './pages/ElectionTimeline';
 import Candidates from './pages/Candidates';
 import CandidateComparison from './pages/CandidateComparison';
 import VoterMatchQuiz from './pages/VoterMatchQuiz';
+import HighlightPopup from './components/ui/HighlightPopup';
 
 function App() {
   return (
@@ -37,6 +38,7 @@ function App() {
             </main>
             <Chatbot />
             <AccessibilityToolbar />
+            <HighlightPopup />
           </div>
         </Router>
       </AuthProvider>

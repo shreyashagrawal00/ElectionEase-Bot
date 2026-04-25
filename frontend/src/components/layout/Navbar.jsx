@@ -29,7 +29,7 @@ const Navbar = () => {
             </Link>
           </div>
           <div className="flex items-center space-x-2 md:space-x-4">
-            <div className="flex items-center bg-slate-100 rounded-lg px-2 py-1">
+            <div className="flex items-center bg-slate-100/50 rounded-lg px-2 py-1">
               <Globe className="h-4 w-4 text-slate-500 mr-1" />
               <select 
                 onChange={changeLanguage} 
@@ -57,8 +57,8 @@ const Navbar = () => {
 
             {user ? (
               <>
-                <Link to="/dashboard" className="text-slate-700 hover:text-primary-600 font-medium hidden sm:block">Dashboard</Link>
-                <Link to="/candidates" className="text-slate-700 hover:text-primary-600 font-medium hidden sm:flex items-center">
+                <Link to="/dashboard" className="text-slate-800 hover:text-primary-600 font-medium hidden sm:block">Dashboard</Link>
+                <Link to="/candidates" className="text-slate-800 hover:text-primary-600 font-medium hidden sm:flex items-center">
                   <span>Candidates</span>
                 </Link>
                 <Button variant="outline" onClick={logout} className="flex items-center text-sm px-3 py-1">

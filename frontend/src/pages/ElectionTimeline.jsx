@@ -41,7 +41,7 @@ const ElectionTimeline = () => {
       <motion.button 
         whileHover={{ x: -4 }}
         onClick={() => navigate('/dashboard')}
-        className="flex items-center text-slate-400 hover:text-primary-600 transition-colors mb-12 group bg-white px-4 py-2 rounded-full shadow-sm border border-slate-100"
+        className="flex items-center text-slate-400 hover:text-primary-500 transition-colors mb-12 group bg-surface px-4 py-2 rounded-full shadow-sm border border-slate-200"
       >
         <ArrowLeft className="w-5 h-5 mr-2 group-hover:-translate-x-1 transition-transform" />
         <span className="font-bold text-sm uppercase tracking-widest">{t('back_to_dashboard')}</span>
@@ -57,12 +57,12 @@ const ElectionTimeline = () => {
           {getLocalized(election.title)}
         </h1>
         <div className="flex flex-wrap gap-6 text-slate-600 font-semibold uppercase tracking-widest text-xs">
-          <div className="flex items-center bg-slate-100 px-3 py-1.5 rounded-lg border border-slate-200/50">
-            <Calendar className="w-4 h-4 mr-2 text-primary-600" />
+          <div className="flex items-center bg-slate-100/50 px-3 py-1.5 rounded-lg border border-slate-200/50">
+            <Calendar className="w-4 h-4 mr-2 text-primary-500" />
             <span>{new Date(election.date).toLocaleDateString(i18n.language === 'en' ? 'en-US' : 'hi-IN')}</span>
           </div>
-          <div className="flex items-center bg-slate-100 px-3 py-1.5 rounded-lg border border-slate-200/50">
-            <MapPin className="w-4 h-4 mr-2 text-primary-600" />
+          <div className="flex items-center bg-slate-100/50 px-3 py-1.5 rounded-lg border border-slate-200/50">
+            <MapPin className="w-4 h-4 mr-2 text-primary-500" />
             <span>{election.state || 'National'} {election.district ? ` - ${election.district}` : ''}</span>
           </div>
         </div>
@@ -72,15 +72,15 @@ const ElectionTimeline = () => {
         {/* Stages Timeline */}
         <div className="lg:col-span-3">
           <h2 className="text-3xl font-extrabold text-slate-900 mb-12 flex items-center tracking-tight">
-            <div className="w-10 h-10 rounded-2xl bg-primary-100 flex items-center justify-center mr-4 shadow-sm">
-               <Calendar className="w-5 h-5 text-primary-600" />
+            <div className="w-10 h-10 rounded-2xl bg-primary-100/20 flex items-center justify-center mr-4 shadow-sm">
+               <Calendar className="w-5 h-5 text-primary-500" />
             </div>
             {t('election_stages')}
           </h2>
           
           <div className="space-y-0 relative">
             {/* Timeline connector line */}
-            <div className="absolute left-[27px] top-4 bottom-4 w-1.5 bg-slate-100 rounded-full" />
+            <div className="absolute left-[27px] top-4 bottom-4 w-1.5 bg-slate-100/50 rounded-full" />
             
             {election.steps.sort((a, b) => a.order - b.order).map((step, idx) => (
               <motion.div 
@@ -91,8 +91,8 @@ const ElectionTimeline = () => {
                 transition={{ delay: idx * 0.1 }}
                 className="relative pl-24 pb-16 last:pb-0 group"
               >
-                <div className={`absolute left-0 w-14 h-14 rounded-2xl border-4 border-slate-50 shadow-md flex items-center justify-center z-10 transition-all duration-500 group-hover:scale-110 ${
-                  idx === 0 ? 'premium-gradient text-white shadow-primary-200' : 'bg-white text-slate-300'
+                <div className={`absolute left-0 w-14 h-14 rounded-2xl border-4 border-surface shadow-md flex items-center justify-center z-10 transition-all duration-500 group-hover:scale-110 ${
+                  idx === 0 ? 'premium-gradient text-white shadow-primary-200' : 'bg-surface text-slate-400'
                 }`}>
                   {idx === 0 ? <CheckCircle2 className="w-7 h-7" /> : <Circle className="w-6 h-6" />}
                 </div>
@@ -101,7 +101,7 @@ const ElectionTimeline = () => {
                   <div className="flex items-start justify-between mb-4">
                     <h3 className="text-2xl font-extrabold text-slate-900 leading-tight">{getLocalized(step.title)}</h3>
                     {idx === 0 && (
-                      <span className="bg-primary-50 text-primary-700 text-[10px] font-extrabold uppercase tracking-widest px-3 py-1 rounded-full border border-primary-100">
+                      <span className="bg-[var(--status-info-bg)] text-[var(--status-info-text)] text-[10px] font-extrabold uppercase tracking-widest px-3 py-1 rounded-full border border-[var(--status-info-text)]/20">
                         Current Stage
                       </span>
                     )}
@@ -135,12 +135,12 @@ const ElectionTimeline = () => {
                 </h3>
                 <div className="space-y-4">
                     {election.candidates.map((cand, i) => (
-                        <div key={i} className="p-4 bg-slate-50 rounded-xl border border-slate-100">
-                            <span className="text-[10px] uppercase font-bold text-primary-600 block mb-1">{cand.party}</span>
+                        <div key={i} className="p-4 bg-slate-100/50 rounded-xl border border-slate-200">
+                            <span className="text-[10px] uppercase font-bold text-primary-500 block mb-1">{cand.party}</span>
                             <h4 className="font-bold text-slate-800 text-sm mb-2">{cand.name}</h4>
                             <div className="flex flex-wrap gap-1.5">
                                 {(cand.platform || []).map((p, j) => (
-                                    <span key={j} className="text-[10px] bg-white text-slate-600 px-2 py-0.5 rounded border border-slate-200">
+                                    <span key={j} className="text-[10px] bg-surface text-slate-600 px-2 py-0.5 rounded border border-slate-200">
                                         {p}
                                     </span>
                                 ))}

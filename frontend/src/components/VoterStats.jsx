@@ -5,10 +5,10 @@ import Card from './ui/Card';
 
 const VoterStats = () => {
   const stats = [
-    { label: 'Total Registered', value: '96.8Cr', icon: Users, color: 'bg-blue-100 text-blue-600' },
+    { label: 'Total Registered', value: '96.8Cr', icon: Users, color: 'bg-[var(--status-info-bg)] text-[var(--status-info-text)]' },
     { label: 'Youth Voters', value: '1.8Cr', icon: UserPlus, color: 'bg-primary-100 text-primary-600' },
-    { label: 'Ready to Vote', value: '82%', icon: CheckCircle, color: 'bg-emerald-100 text-emerald-600' },
-    { label: 'Engagement', value: '+12%', icon: TrendingUp, color: 'bg-indigo-100 text-indigo-600' }
+    { label: 'Ready to Vote', value: '82%', icon: CheckCircle, color: 'bg-[var(--status-success-bg)] text-[var(--status-success-text)]' },
+    { label: 'Engagement', value: '+12%', icon: TrendingUp, color: 'bg-[var(--status-info-bg)] text-[var(--status-info-text)]' }
   ];
 
   return (
@@ -22,7 +22,7 @@ const VoterStats = () => {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: idx * 0.1 }}
           >
-          <Card className="flex items-center p-8 bg-white transition-all duration-300 hover:scale-[1.03] hover:shadow-2xl border-slate-100/50">
+          <Card className="flex items-center p-8 bg-surface transition-all duration-300 hover:scale-[1.03] hover:shadow-2xl border-slate-100/50">
               <div className={`p-4 rounded-2xl mr-4 ${stat.color} shadow-sm`}>
                 <Icon className="w-6 h-6" />
               </div>
