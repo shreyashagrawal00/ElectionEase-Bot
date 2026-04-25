@@ -44,13 +44,19 @@ const CandidateResearchModal = ({ isOpen, onClose, candidateName, researchUrl })
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+    <div 
+      className="fixed inset-0 z-[100] flex items-center justify-center p-4"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="modal-title"
+    >
       <motion.div 
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         onClick={onClose}
         className="absolute inset-0 bg-slate-900/60 backdrop-blur-md"
+        aria-hidden="true"
       />
       
       <motion.div
@@ -62,15 +68,19 @@ const CandidateResearchModal = ({ isOpen, onClose, candidateName, researchUrl })
         {/* Header */}
         <div className="p-8 bg-slate-50 border-b border-slate-200/50 flex items-center justify-between">
           <div className="flex items-center space-x-4">
-            <div className="w-12 h-12 rounded-2xl bg-primary-100 text-primary-600 flex items-center justify-center">
+            <div className="w-12 h-12 rounded-2xl bg-primary-100 text-primary-600 flex items-center justify-center" aria-hidden="true">
               <FileText className="w-6 h-6" />
             </div>
             <div>
-              <h2 className="text-2xl font-black text-slate-800 tracking-tight">Research Report: {candidateName}</h2>
+              <h2 id="modal-title" className="text-2xl font-black text-slate-800 tracking-tight">Research Report: {candidateName}</h2>
               <p className="text-xs text-slate-400 font-bold uppercase tracking-widest mt-1">Verified MyNeta Analysis</p>
             </div>
           </div>
-          <button onClick={onClose} className="p-2 hover:bg-slate-200 rounded-xl transition-colors">
+          <button 
+            onClick={onClose} 
+            className="p-2 hover:bg-slate-200 rounded-xl transition-colors"
+            aria-label="Close research report"
+          >
             <X className="w-6 h-6 text-slate-400" />
           </button>
         </div>

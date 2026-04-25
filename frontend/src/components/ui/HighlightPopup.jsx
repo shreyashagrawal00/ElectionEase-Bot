@@ -3,6 +3,10 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { X, Sparkles, Target, Search, MessageSquare, ArrowRight, Zap, CheckCircle2 } from 'lucide-react';
 import Button from './Button';
 
+/**
+ * HighlightPopup component displays a premium feature introduction to first-time users.
+ * Features smooth animations and glassmorphic design.
+ */
 const HighlightPopup = () => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -68,6 +72,7 @@ const HighlightPopup = () => {
               <button 
                 onClick={() => setIsOpen(false)}
                 className="absolute top-5 right-5 p-2.5 bg-slate-100 hover:bg-slate-200 rounded-full transition-colors"
+                aria-label="Close premium feature highlight"
               >
                 <X className="w-4 h-4 text-slate-500" />
               </button>

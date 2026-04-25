@@ -25,7 +25,9 @@ const UserSchema = new mongoose.Schema({
     },
     platform: [String],
     electionId: { type: String }
-  }]
+  }],
+  resetPasswordToken: String,
+  resetPasswordExpires: Date
 }, { timestamps: true });
 
 UserSchema.pre('save', async function() {

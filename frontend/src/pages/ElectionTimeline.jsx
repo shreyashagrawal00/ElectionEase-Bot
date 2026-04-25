@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Calendar, MapPin, Users, CheckCircle2, Circle } from 'lucide-react';
 import Card from '../components/ui/Card';
-import Button from '../components/ui/Button';
+import API_URL from '../config/api';
 
 const ElectionTimeline = () => {
   const { id } = useParams();
@@ -17,7 +17,7 @@ const ElectionTimeline = () => {
   useEffect(() => {
     const fetchElection = async () => {
       try {
-        const res = await axios.get(`http://127.0.0.1:5000/api/elections/${id}`);
+        const res = await axios.get(`${API_URL}/elections/${id}`);
         setElection(res.data);
       } catch (err) {
         console.error(err);
@@ -160,13 +160,22 @@ const ElectionTimeline = () => {
                         <div key={i} className="p-4 bg-white border border-slate-100 rounded-xl shadow-sm">
                             <h4 className="font-bold text-slate-800 text-sm mb-1">{station.name}</h4>
                             <p className="text-slate-500 text-xs truncate mb-2">{station.address}</p>
-                            <div className="flex flex-wrap gap-1">
+                            <div className="flex flex-wrap gap-1 mb-3">
                                 {station.accessibilityFeatures.map((f, j) => (
                                     <span key={j} className="text-[9px] bg-primary-50 text-primary-700 px-1.5 py-0.5 rounded font-bold">
                                         {f}
                                     </span>
                                 ))}
                             </div>
+                            <a 
+                                href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(station.name + ' ' + station.address)}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-[10px] font-black text-primary-600 hover:text-primary-700 flex items-center uppercase tracking-tighter"
+                            >
+                                <MapPin className="w-3 h-3 mr-1" />
+                                View on Google Maps
+                            </a>
                         </div>
                     ))}
                 </div>

@@ -4,6 +4,8 @@ const cors = require('cors');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const connectDB = require('./config/db');
+const errorHandler = require('./middleware/errorMiddleware');
+const mongoSanitize = require('express-mongo-sanitize');
 
 // Connect Database
 connectDB();
@@ -27,6 +29,9 @@ app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/elections', require('./routes/electionRoutes'));
 app.use('/api/chat', require('./routes/chatRoutes'));
 app.use('/api/news', require('./routes/newsRoutes'));
+
+// Error Handler Middleware (Should be last)
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
 
