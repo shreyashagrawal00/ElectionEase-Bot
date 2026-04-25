@@ -33,12 +33,12 @@ const Navbar = () => {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-4">
-            <div className="flex items-center bg-slate-200/60 dark:bg-slate-800/50 rounded-lg px-3 py-1.5 border border-slate-300/30 dark:border-white/5">
-              <Globe className="h-4 w-4 text-slate-800 dark:text-slate-400 mr-2" />
+            <div className={`flex items-center rounded-lg px-3 py-1.5 border ${darkMode ? 'bg-slate-800/50 border-white/5' : 'bg-slate-200/60 border-slate-300/30'}`}>
+              <Globe className={`h-4 w-4 mr-2 ${darkMode ? 'text-slate-400' : 'text-[#000000]'}`} />
               <select 
                 onChange={changeLanguage} 
                 value={i18n.language}
-                className="bg-transparent text-sm font-black text-slate-950 dark:text-white focus:outline-none cursor-pointer"
+                className={`bg-transparent text-sm font-bold focus:outline-none cursor-pointer ${darkMode ? 'text-white' : 'text-[#000000]'}`}
               >
                 <option value="en">English</option>
                 <option value="hi">हिंदी (Hindi)</option>
@@ -54,39 +54,40 @@ const Navbar = () => {
 
             <button 
               onClick={toggleDarkMode}
-              className="p-2 text-slate-900 dark:text-slate-100 hover:text-primary-600 focus:outline-none transition-transform active:scale-90"
+              className={`p-2 hover:text-primary-600 focus:outline-none transition-transform active:scale-90 ${darkMode ? 'text-slate-100' : 'text-[#000000]'}`}
               aria-label="Toggle Dark Mode"
             >
-              {darkMode ? <Sun className="h-5 w-5 text-amber-500" /> : <Moon className="h-5 w-5 text-slate-950" />}
+              {darkMode ? <Sun className="h-5 w-5 text-amber-500" /> : <Moon className="h-5 w-5 text-[#000000]" />}
             </button>
 
             {user ? (
               <>
-                <Link to="/dashboard" className="text-slate-950 dark:text-white hover:text-primary-600 font-black transition-colors">{t('dashboard') || 'Dashboard'}</Link>
-                <Link to="/candidates" className="text-slate-950 dark:text-white hover:text-primary-600 font-black transition-colors">{t('candidates') || 'Candidates'}</Link>
-                <Button variant="outline" onClick={logout} className="flex items-center text-sm px-4 py-2 border-slate-900 text-slate-950 font-black">
+                <Link to="/dashboard" className={`hover:text-primary-600 font-bold transition-colors ${darkMode ? 'text-white' : 'text-[#000000]'}`}>{t('dashboard') || 'Dashboard'}</Link>
+                <Link to="/candidates" className={`hover:text-primary-600 font-bold transition-colors ${darkMode ? 'text-white' : 'text-[#000000]'}`}>{t('candidates') || 'Candidates'}</Link>
+                <Button variant="outline" onClick={logout} className={`flex items-center text-sm px-4 py-2 font-bold ${darkMode ? 'border-white text-white' : 'border-[#000000] text-[#000000]'}`}>
                   <LogOut className="h-4 w-4 mr-2" /> 
                   <span>{t('logout')}</span>
                 </Button>
               </>
             ) : (
               <Link to="/login">
-                <Button className="px-6 py-2 text-sm font-black">{t('get_started')}</Button>
+                <Button className="px-6 py-2 text-sm font-bold">{t('get_started')}</Button>
               </Link>
             )}
           </div>
+
 
           {/* Mobile Menu Button */}
           <div className="flex md:hidden items-center space-x-2">
             <button 
               onClick={toggleDarkMode}
-              className="p-2 text-slate-500"
+              className="p-2 text-black"
             >
-              {darkMode ? <Sun className="h-5 w-5 text-amber-500" /> : <Moon className="h-5 w-5 text-slate-600" />}
+              {darkMode ? <Sun className="h-5 w-5 text-amber-500" /> : <Moon className="h-5 w-5 text-black" />}
             </button>
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="p-2 text-slate-600 dark:text-slate-300"
+              className="p-2 text-black dark:text-slate-300"
             >
               {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </button>
@@ -101,13 +102,13 @@ const Navbar = () => {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="md:hidden bg-surface border-b border-slate-200/50 overflow-hidden"
+            className={`md:hidden border-b overflow-hidden ${darkMode ? 'bg-[#050810] border-slate-800' : 'bg-white border-slate-200/50'}`}
           >
             <div className="px-4 pt-2 pb-6 space-y-2">
-              <div className="flex items-center justify-between p-3 bg-slate-100/50 dark:bg-slate-800/50 rounded-xl mb-4">
+              <div className={`flex items-center justify-between p-3 rounded-xl mb-4 ${darkMode ? 'bg-slate-800/50' : 'bg-slate-100/50'}`}>
                 <div className="flex items-center">
                   <Globe className="h-4 w-4 text-slate-500 mr-2" />
-                  <span className="text-sm font-medium text-slate-600 dark:text-slate-400">Language</span>
+                  <span className={`text-sm font-medium ${darkMode ? 'text-slate-400' : 'text-slate-600'}`}>Language</span>
                 </div>
                 <select 
                   onChange={changeLanguage} 
@@ -128,11 +129,11 @@ const Navbar = () => {
 
               {user ? (
                 <>
-                  <Link to="/dashboard" onClick={() => setIsMenuOpen(false)} className="block p-3 text-lg font-black text-slate-950 dark:text-white hover:bg-slate-100/50 rounded-xl">Dashboard</Link>
-                  <Link to="/candidates" onClick={() => setIsMenuOpen(false)} className="block p-3 text-lg font-black text-slate-950 dark:text-white hover:bg-slate-100/50 rounded-xl">Candidates</Link>
-                  <Link to="/knowledge" onClick={() => setIsMenuOpen(false)} className="block p-3 text-lg font-black text-slate-950 dark:text-white hover:bg-slate-100/50 rounded-xl">Info Center</Link>
+                  <Link to="/dashboard" onClick={() => setIsMenuOpen(false)} className={`block p-3 text-lg font-bold hover:bg-slate-100/50 rounded-xl ${darkMode ? 'text-white' : 'text-[#000000]'}`}>Dashboard</Link>
+                  <Link to="/candidates" onClick={() => setIsMenuOpen(false)} className={`block p-3 text-lg font-bold hover:bg-slate-100/50 rounded-xl ${darkMode ? 'text-white' : 'text-[#000000]'}`}>Candidates</Link>
+                  <Link to="/knowledge" onClick={() => setIsMenuOpen(false)} className={`block p-3 text-lg font-bold hover:bg-slate-100/50 rounded-xl ${darkMode ? 'text-white' : 'text-[#000000]'}`}>Info Center</Link>
                   <div className="pt-4">
-                    <Button onClick={logout} className="w-full py-4 rounded-2xl justify-center font-black">
+                    <Button onClick={logout} className="w-full py-4 rounded-2xl justify-center font-bold">
                       <LogOut className="h-5 w-5 mr-2" />
                       {t('logout')}
                     </Button>
@@ -140,7 +141,7 @@ const Navbar = () => {
                 </>
               ) : (
                 <Link to="/login" onClick={() => setIsMenuOpen(false)} className="block pt-2">
-                  <Button className="w-full py-4 rounded-2xl justify-center font-black">{t('get_started')}</Button>
+                  <Button className="w-full py-4 rounded-2xl justify-center font-bold">{t('get_started')}</Button>
                 </Link>
               )}
             </div>
