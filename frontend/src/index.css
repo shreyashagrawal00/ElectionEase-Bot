@@ -65,18 +65,18 @@ html.text-medium { font-size: 16px; }
 html.text-large { font-size: 20px; }
 
 .high-contrast {
-  background-color: #000 !important;
-  color: #fff !important;
+  background-color: #1E104E !important;
+  color: #FFC85C !important;
 }
 
 .high-contrast body {
-  background-color: #000 !important;
-  color: #fff !important;
+  background-color: #1E104E !important;
+  color: #FFC85C !important;
 }
 
 /* Universal borders and removals */
 .high-contrast * {
-  border-color: #fff !important;
+  border-color: #452E5A !important;
   background-image: none !important;
   box-shadow: none !important;
   text-shadow: none !important;
@@ -88,18 +88,25 @@ html.text-large { font-size: 20px; }
 .high-contrast .glass-nav,
 .high-contrast .bg-white,
 .high-contrast .bg-slate-100 {
-  background-color: #000 !important;
-  border: 2px solid #fff !important;
+  background-color: #1E104E !important;
+  border: 2px solid #452E5A !important;
 }
 
 .high-contrast .bg-slate-50 {
-  background-color: #000 !important;
+  background-color: #1E104E !important;
+}
+
+/* Icon backgrounds */
+.high-contrast .bg-primary-100,
+.high-contrast .bg-primary-50 {
+  background-color: #427AB5 !important;
+  border: none !important;
 }
 
 /* Text overrides for importance */
 .high-contrast h1, .high-contrast h2, .high-contrast h3, .high-contrast h4,
 .high-contrast p, .high-contrast span, .high-contrast label, .high-contrast div {
-  color: #fff !important;
+  color: #FFC85C !important;
 }
 
 .high-contrast .text-primary-600,
@@ -107,37 +114,38 @@ html.text-large { font-size: 20px; }
 .high-contrast .text-emerald-600,
 .high-contrast .text-indigo-600,
 .high-contrast [class*="text-primary-"] {
-  color: #ffff00 !important; /* High Visibility Yellow */
+  color: #FFC85C !important; /* Gold */
 }
 
 .high-contrast .text-slate-400,
 .high-contrast .text-slate-500 {
-  color: #ccc !important;
+  color: #FFC85C !important;
+  opacity: 0.8;
 }
 
 /* Buttons and Actions */
 .high-contrast button,
 .high-contrast [role="button"] {
-  background-color: #000 !important;
-  color: #fff !important;
-  border: 2px solid #fff !important;
+  background-color: #1E104E !important;
+  color: #FFC85C !important;
+  border: 2px solid #452E5A !important;
   font-weight: 800 !important;
   text-transform: uppercase !important;
 }
 
 .high-contrast button:hover {
-  background-color: #fff !important;
-  color: #000 !important;
+  background-color: #452E5A !important;
+  color: #FFC85C !important;
 }
 
 /* Primary Action Exception */
 .high-contrast .bg-primary-600,
 .high-contrast .premium-gradient,
 .high-contrast button[class*="bg-primary"] {
-  background-color: #ffff00 !important;
-  background: #ffff00 !important;
-  color: #000 !important;
-  border: 2px solid #ffff00 !important;
+  background-color: #FFC85C !important;
+  background: #FFC85C !important;
+  color: #1E104E !important;
+  border: 2px solid #FFC85C !important;
 }
 
 /* Icon Visibility */
@@ -150,15 +158,15 @@ html.text-large { font-size: 20px; }
 .high-contrast input, 
 .high-contrast select, 
 .high-contrast textarea {
-  background-color: #000 !important;
-  border: 3px solid #fff !important;
-  color: #fff !important;
+  background-color: #1E104E !important;
+  border: 3px solid #452E5A !important;
+  color: #FFC85C !important;
   border-radius: 0 !important; /* Sharper edges for clarity */
 }
 
 .high-contrast input:focus {
-  border-color: #ffff00 !important;
-  outline: 2px solid #ffff00 !important;
+  border-color: #FFC85C !important;
+  outline: 2px solid #FFC85C !important;
 }
 
 /* Accessibility specific helpers */
