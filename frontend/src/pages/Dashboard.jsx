@@ -123,14 +123,14 @@ const Dashboard = () => {
           return (
             <Card key={step.id} className="p-6 relative transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
               <div className="flex items-center justify-between mb-4">
-                <div className={`p-3 rounded-xl ${isComplete ? 'bg-primary-100 text-primary-600' : 'bg-slate-100 text-slate-500'}`}>
+              <div className={`p-3 rounded-xl ${isComplete ? 'bg-primary-100 text-primary-600' : 'bg-slate-100 text-slate-500'}`}>
                   <Icon className="w-6 h-6" />
                 </div>
                 <button onClick={() => handleStepComplete(step.id, isComplete)}>
                   {isComplete ? <CheckCircle className="w-7 h-7 text-primary-600" /> : <Circle className="w-7 h-7 text-slate-300 hover:text-slate-400" />}
                 </button>
               </div>
-              <h3 className="text-lg font-bold text-slate-900 mb-2">Step {idx + 1}: {step.title}</h3>
+              <h3 className="text-lg font-bold text-slate-900 mb-2">{t('step')} {idx + 1}: {step.title}</h3>
               <p className="text-slate-500 text-sm leading-relaxed">{step.desc}</p>
             </Card>
           );
@@ -166,7 +166,7 @@ const Dashboard = () => {
                        {selectedState}
                     </span>
                   ) : (
-                    "All Regions"
+                    t('all_regions')
                   )}
               </motion.div>
           </div>
@@ -187,7 +187,7 @@ const Dashboard = () => {
                   onClick={() => setSelectedState('')}
                   className={`px-4 py-2 rounded-xl text-xs font-bold border ${!selectedState ? 'bg-slate-200 text-slate-800 border-slate-300' : 'bg-transparent text-slate-400 border-slate-200'}`}
                 >
-                  Clear Filter
+                  {t('clear_filter')}
                 </button>
              </div>
           </div>
@@ -235,7 +235,7 @@ const Dashboard = () => {
            <Card className="p-8 bg-slate-900 border-slate-800 text-white rounded-[2rem] shadow-2xl relative overflow-hidden group">
               <div className="absolute -top-24 -right-24 w-64 h-64 bg-primary-500/20 rounded-full blur-3xl group-hover:bg-primary-500/30 transition-all duration-700"></div>
               <div className="relative z-10">
-                <h4 className="text-slate-400 text-xs font-black uppercase tracking-[0.2em] mb-4">Preparation Roadmap</h4>
+                <h4 className="text-slate-400 text-xs font-black uppercase tracking-[0.2em] mb-4">{t('prep_roadmap')}</h4>
                 <p className="text-xl font-medium leading-relaxed mb-6">
                   {selectedState ? `Analyzing election readiness for ${selectedState}.` : "You're 67% towards becoming an informed voter."}
                 </p>
@@ -261,14 +261,14 @@ const Dashboard = () => {
                 <div className="w-14 h-14 bg-white/10 rounded-2xl flex items-center justify-center mb-6">
                    <MatchIcon className="w-7 h-7 text-indigo-400" />
                 </div>
-                <h4 className="text-slate-400 text-xs font-black uppercase tracking-[0.2em] mb-2">Civic Matching Engine</h4>
-                <h3 className="text-2xl font-black mb-4 leading-tight">Which candidate aligns with your values?</h3>
-                <p className="text-slate-400 text-sm mb-8 leading-relaxed">Take our values assessment to unlock personalized match percentages across all candidate profiles.</p>
+                <h4 className="text-slate-400 text-xs font-black uppercase tracking-[0.2em] mb-2">{t('matching_engine')}</h4>
+                <h3 className="text-2xl font-black mb-4 leading-tight">{t('match_values')}</h3>
+                <p className="text-slate-400 text-sm mb-8 leading-relaxed">{t('match_desc')}</p>
                 <button 
                   onClick={() => navigate('/match')} 
                   className="w-full bg-white text-indigo-900 hover:bg-slate-100 font-black py-4 rounded-2xl shadow-xl transition-all hover:scale-[1.02]"
                 >
-                   {quizResults ? "Retake Assessment" : "Start Matching →"}
+                   {quizResults ? t('retake_assessment') : t('start_matching')} →
                 </button>
               </div>
            </Card>
@@ -280,10 +280,10 @@ const Dashboard = () => {
                    <Search className="w-6 h-6 text-primary-600" />
                 </div>
                 <div>
-                   <h5 className="font-bold text-slate-800">Research Candidates</h5>
-                   <p className="text-sm text-slate-500 mt-1">Deep dive into candidate backgrounds, wealth declarations, and previous criminal records.</p>
+                   <h5 className="font-bold text-slate-800">{t('candidate_center_title')}</h5>
+                   <p className="text-sm text-slate-500 mt-1">{t('candidate_center_subtitle')}</p>
                    <Button onClick={() => navigate('/candidates')} className="mt-4 px-6 py-2 rounded-xl text-xs" variant="outline">
-                      Open Research Center
+                      {t('browse_candidates')}
                    </Button>
                 </div>
               </div>
@@ -300,15 +300,15 @@ const Dashboard = () => {
         >
           <div className="flex items-center justify-between mb-10">
             <div>
-              <h2 className="text-3xl font-black text-slate-900 tracking-tight">Your Personal Watchlist</h2>
-              <p className="text-slate-500 text-sm mt-1 uppercase tracking-[0.2em] font-bold">Priority Research Candidates</p>
+              <h2 className="text-3xl font-black text-slate-900 tracking-tight">{t('watchlist_title')}</h2>
+              <p className="text-slate-500 text-sm mt-1 uppercase tracking-[0.2em] font-bold">{t('watchlist_subtitle')}</p>
             </div>
             <Button 
               variant="ghost" 
               onClick={() => navigate('/candidates')} 
               className="text-primary-600 font-bold hover:bg-primary-50 px-6 py-3 rounded-2xl"
             >
-              Research More Candidates →
+              {t('research_more')} →
             </Button>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
