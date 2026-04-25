@@ -99,15 +99,23 @@ exports.getCandidateDetails = async (req, res) => {
     const { url } = req.query;
     if (!url) return res.status(400).json({ error: 'URL is required' });
 
+    console.log(`Starting deep research scrape for: ${url}`);
+
     const response = await axios.get(url, {
+      timeout: 10000, // 10 second timeout
       headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
+        'Accept-Language': 'en-US,en;q=0.9'
       }
     });
+
+    console.log('Successfully fetched HTML from MyNeta');
+
     const $ = cheerio.load(response.data);
 
     const details = {
-      name: $('.candidate-name').text().trim(),
+      name: $('.candidate-name').text().trim() || 'Unknown Candidate',
       criminalCases: 0,
       criminalDetails: '',
       assets: 'N/A',
@@ -126,34 +134,41 @@ exports.getCandidateDetails = async (req, res) => {
     }
 
     // Scrape Education
-    $('div').each((i, el) => {
+    $('div, td, th').each((i, el) => {
       const text = $(el).text().trim();
-      if (text.includes('Education')) {
-        details.education = $(el).next().text().trim() || 'Not specified';
+      if (text.toLowerCase().includes('education') || text.toLowerCase().includes('educational qualification')) {
+        const value = $(el).next().text().trim();
+        if (value) details.education = value;
       }
     });
 
-    // Scrape Financials (Look for common MyNeta table patterns)
-    $('table tr').each((i, el) => {
+    // Scrape Financials (Improved targeting)
+    $('table tr, div.grid-row').each((i, el) => {
       const rowText = $(el).text().toLowerCase();
+      const cells = $(el).find('td, div');
+      
       if (rowText.includes('total assets')) {
-        details.assets = $(el).find('td').last().text().trim();
+        details.assets = cells.last().text().trim();
       }
       if (rowText.includes('total liabilities')) {
-        details.liabilities = $(el).find('td').last().text().trim();
+        details.liabilities = cells.last().text().trim();
       }
     });
 
-    // Fallback for Assets/Liabilities if table structure is different
+    // Regex Fallbacks
     if (details.assets === 'N/A') {
-      const assetMatch = response.data.match(/Assets:\s*(Rs\s*[\d,]+)/i);
-      if (assetMatch) details.assets = assetMatch[1];
+      const assetMatch = response.data.match(/Total Assets:?\s*(?:Rs\s*)?([\d,]+)/i);
+      if (assetMatch) details.assets = `Rs ${assetMatch[1]}`;
     }
 
+    console.log('Scrape complete:', { name: details.name, assets: details.assets });
     res.json(details);
   } catch (err) {
     console.error('Error scraping candidate details:', err.message);
-    res.status(500).json({ error: 'Failed to extract deep research data.' });
+    if (err.code === 'ECONNABORTED') {
+      return res.status(504).json({ error: 'Target website (MyNeta) took too long to respond.' });
+    }
+    res.status(500).json({ error: 'Failed to extract deep research data. ' + err.message });
   }
 };
 

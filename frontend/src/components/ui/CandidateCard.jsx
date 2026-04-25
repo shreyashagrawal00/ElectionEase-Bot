@@ -118,7 +118,13 @@ const CandidateCard = ({ candidate }) => {
             </div>
             
             <button 
-              onClick={() => setIsResearchOpen(true)}
+              onClick={() => {
+                if (candidate.researchUrl) {
+                  window.open(candidate.researchUrl, '_blank');
+                } else {
+                  setIsResearchOpen(true);
+                }
+              }}
               className="w-full mt-4 flex items-center justify-center space-x-2 bg-slate-900 text-white py-3 rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-primary-600 transition-all shadow-xl shadow-slate-200"
             >
               <FileText className="w-4 h-4" />

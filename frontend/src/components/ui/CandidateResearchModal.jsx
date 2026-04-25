@@ -7,21 +7,33 @@ import Button from './Button';
 
 const CandidateResearchModal = ({ isOpen, onClose, candidateName, researchUrl }) => {
   const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
-      if (!isOpen || !researchUrl) return;
+      if (!isOpen) return;
       
+      if (!researchUrl) {
+        setError('No research data available for this candidate yet.');
+        return;
+      }
+      
+      console.log('Fetching deep research for URL:', researchUrl);
       setLoading(true);
       setError(null);
       try {
-        const res = await axios.get(`http://127.0.0.1:5000/api/elections/research?url=${encodeURIComponent(researchUrl)}`);
+        const res = await axios.get(`http://localhost:5000/api/elections/research?url=${encodeURIComponent(researchUrl)}`, {
+          timeout: 15000 // 15 second timeout
+        });
         setData(res.data);
       } catch (err) {
         console.error('Failed to fetch research data', err);
-        setError('Unable to load deep research data. MyNeta might be temporarily unavailable.');
+        if (err.code === 'ECONNABORTED' || err.response?.status === 504) {
+          setError('The research server took too long to respond. MyNeta might be experiencing high traffic.');
+        } else {
+          setError('Unable to load deep research data. Please check your connection or try again later.');
+        }
       } finally {
         setLoading(false);
       }
@@ -71,14 +83,16 @@ const CandidateResearchModal = ({ isOpen, onClose, candidateName, researchUrl })
               <p className="text-slate-500 font-medium italic">Scraping deep dive records...</p>
             </div>
           ) : error ? (
-            <div className="py-12 text-center">
+            <div className="py-12 text-center px-6">
                <AlertTriangle className="w-16 h-16 text-amber-500 mx-auto mb-4" />
                <p className="text-slate-600 font-medium mb-6">{error}</p>
-               <Button onClick={() => window.open(researchUrl, '_blank')} variant="outline">
-                  View on MyNeta Directly <ExternalLink className="w-4 h-4 ml-2" />
-               </Button>
+               {researchUrl && (
+                 <Button onClick={() => window.open(researchUrl, '_blank')} variant="outline">
+                    View on MyNeta Directly <ExternalLink className="w-4 h-4 ml-2" />
+                 </Button>
+               )}
             </div>
-          ) : (
+          ) : data ? (
             <div className="space-y-8">
               {/* Top Stats Grid */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -153,6 +167,11 @@ const CandidateResearchModal = ({ isOpen, onClose, candidateName, researchUrl })
                   View Full Affidavit on MyNeta <ExternalLink className="w-4 h-4 ml-2" />
                 </Button>
               </div>
+            </div>
+          ) : (
+            <div className="py-24 flex flex-col items-center justify-center">
+               <Loader2 className="w-12 h-12 text-slate-200 animate-spin mb-4" />
+               <p className="text-slate-400 font-medium">Preparing analysis...</p>
             </div>
           )}
         </div>
