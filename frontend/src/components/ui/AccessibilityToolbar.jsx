@@ -5,7 +5,7 @@ import { useAccessibility } from '../../context/AccessibilityContext';
 import { useTranslation } from 'react-i18next';
 
 const AccessibilityToolbar = () => {
-  const { highContrast, toggleHighContrast, fontSize, setFontSize } = useAccessibility();
+  const { highContrast, toggleHighContrast, fontSize, setFontSize, darkMode } = useAccessibility();
   const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
 
@@ -26,12 +26,12 @@ const AccessibilityToolbar = () => {
             className={`rounded-[2.5rem] shadow-2xl border p-8 mb-6 w-72 transition-all duration-300 ${
               highContrast 
                 ? 'bg-black border-2 border-white' 
-                : 'bg-white/95 backdrop-blur-2xl border-slate-200/50'
+                : 'bg-surface backdrop-blur-2xl border-slate-200/50'
             }`}
           >
-            <div className={`flex items-center justify-between mb-8 pb-4 border-b ${highContrast ? 'border-white' : 'border-slate-100'}`}>
+            <div className={`flex items-center justify-between mb-8 pb-4 border-b ${highContrast ? 'border-white' : 'border-slate-100/20'}`}>
                <h3 className={`text-xs font-black uppercase tracking-[0.2em] ${highContrast ? 'text-white' : 'text-slate-800'}`}>
-                 App Settings
+                 {t('settings') || 'App Settings'}
                </h3>
                <div className="w-2 h-2 rounded-full bg-primary-500 animate-pulse"></div>
             </div>
@@ -39,10 +39,10 @@ const AccessibilityToolbar = () => {
             {/* High Contrast Toggle */}
             <div className="mb-10">
               <div className="flex items-center justify-between mb-4">
-                <div className={`p-2 rounded-xl ${highContrast ? 'bg-slate-800' : 'bg-slate-100'}`}>
-                  <Eye className={`w-4 h-4 ${highContrast ? 'text-white' : 'text-slate-600'}`} />
+                <div className={`p-2 rounded-xl ${highContrast || darkMode ? 'bg-slate-800' : 'bg-slate-100'}`}>
+                  <Eye className={`w-4 h-4 ${highContrast || darkMode ? 'text-white' : 'text-slate-600'}`} />
                 </div>
-                <span className={`text-sm font-bold ${highContrast ? 'text-white' : 'text-slate-800'}`}>High Contrast</span>
+                <span className={`text-sm font-bold ${highContrast || darkMode ? 'text-white' : 'text-slate-800'}`}>High Contrast</span>
               </div>
               <button
                 onClick={toggleHighContrast}
@@ -54,7 +54,7 @@ const AccessibilityToolbar = () => {
                   className="absolute top-1 left-0 w-4 h-4 bg-white rounded-full shadow-md"
                 />
               </button>
-              <p className={`mt-3 text-[10px] font-medium leading-relaxed ${highContrast ? 'text-slate-300' : 'text-slate-400'}`}>
+              <p className={`mt-3 text-[10px] font-medium leading-relaxed ${highContrast || darkMode ? 'text-slate-400' : 'text-slate-400'}`}>
                 Enhances visibility for those with low vision or light sensitivity.
               </p>
             </div>
@@ -62,10 +62,10 @@ const AccessibilityToolbar = () => {
             {/* Font Size Selector */}
             <div>
               <div className="flex items-center space-x-3 mb-6">
-                <div className={`p-2 rounded-xl ${highContrast ? 'bg-slate-800' : 'bg-slate-100'}`}>
-                  <Type className={`w-4 h-4 ${highContrast ? 'text-white' : 'text-slate-600'}`} />
+                <div className={`p-2 rounded-xl ${highContrast || darkMode ? 'bg-slate-800' : 'bg-slate-100'}`}>
+                  <Type className={`w-4 h-4 ${highContrast || darkMode ? 'text-white' : 'text-slate-600'}`} />
                 </div>
-                <span className={`text-sm font-bold ${highContrast ? 'text-white' : 'text-slate-800'}`}>Text Scaling</span>
+                <span className={`text-sm font-bold ${highContrast || darkMode ? 'text-white' : 'text-slate-800'}`}>Text Scaling</span>
               </div>
               <div className="grid grid-cols-3 gap-3">
                 {fontSizes.map((f) => (
@@ -74,8 +74,8 @@ const AccessibilityToolbar = () => {
                     onClick={() => setFontSize(f.id)}
                     className={`py-3 rounded-2xl border-2 font-black transition-all transform active:scale-95 ${
                       fontSize === f.id 
-                        ? 'bg-primary-600 border-primary-100 text-white shadow-lg shadow-primary-200' 
-                        : 'bg-white border-slate-100 text-slate-500 hover:border-slate-200'
+                        ? 'bg-primary-600 border-primary-100 text-white shadow-lg shadow-primary-500/30' 
+                        : (darkMode ? 'bg-slate-800 border-slate-700 text-slate-300' : 'bg-white border-slate-100 text-slate-500')
                     }`}
                   >
                     <span className={f.size}>{f.label}</span>
@@ -90,7 +90,7 @@ const AccessibilityToolbar = () => {
       <button
         onClick={() => setIsOpen(!isOpen)}
         className={`w-16 h-16 rounded-full shadow-2xl flex items-center justify-center transition-all duration-500 transform hover:scale-110 active:rotate-12 ${
-          isOpen ? 'bg-slate-900 border-slate-800 text-white' : 'bg-white border-slate-200 text-primary-600'
+          isOpen || darkMode ? 'bg-slate-900 border-slate-800 text-white' : 'bg-white border-slate-200 text-primary-600'
         } border-2`}
       >
         <motion.div

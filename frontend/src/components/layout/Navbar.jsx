@@ -2,13 +2,13 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useAccessibility } from '../../context/AccessibilityContext';
-import { Settings, Info, LogOut, Globe, Users, CheckCircle2 } from 'lucide-react';
+import { Moon, Sun, Info, LogOut, Globe, Users, CheckCircle2 } from 'lucide-react';
 import Button from '../ui/Button';
 import { useTranslation } from 'react-i18next';
 
 const Navbar = () => {
   const { user, logout } = useAuth();
-  const { toggleHighContrast } = useAccessibility();
+  const { toggleHighContrast, darkMode, toggleDarkMode } = useAccessibility();
   const { t, i18n } = useTranslation();
 
   const changeLanguage = (e) => {
@@ -49,11 +49,11 @@ const Navbar = () => {
             </div>
 
             <button 
-              onClick={toggleHighContrast}
-              className="p-2 text-slate-500 hover:text-slate-700 focus:outline-none"
-              aria-label="Toggle High Contrast"
+              onClick={toggleDarkMode}
+              className="p-2 text-slate-500 hover:text-slate-700 focus:outline-none transition-transform active:scale-90"
+              aria-label="Toggle Dark Mode"
             >
-              <Settings className="h-5 w-5" />
+              {darkMode ? <Sun className="h-5 w-5 text-amber-500" /> : <Moon className="h-5 w-5 text-slate-600" />}
             </button>
             
             <Link to="/knowledge" className="text-slate-500 hover:text-slate-700 hidden sm:flex items-center">

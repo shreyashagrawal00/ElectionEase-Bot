@@ -39,6 +39,7 @@ const Login = () => {
   const [passwordError, setPasswordError] = useState('');
   const { login, register } = useAuth();
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const validatePassword = (pass) => {
     if (pass.length < 8) return 'Password must be at least 8 characters';
@@ -83,7 +84,8 @@ const Login = () => {
 
   return (
     <div className="min-h-[calc(100vh-5rem)] flex items-center justify-center py-12 px-4 relative overflow-hidden">
-      {/* Background decorations omitted for brevity */}
+      {/* Background decorations */}
+      <div className="absolute top-0 -translate-y-1/2 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-primary-500/5 rounded-full blur-[120px] -z-10" />
       
       <motion.div
         initial={{ opacity: 0, y: 30 }}
@@ -91,16 +93,16 @@ const Login = () => {
         className="w-full max-w-md"
       >
         <div className="text-center mb-8">
-          <div className="inline-flex items-center space-x-2 bg-primary-50 border border-primary-200 text-primary-600 px-4 py-2 rounded-full mb-4">
+          <div className="inline-flex items-center space-x-2 bg-primary-100/10 border border-primary-500/20 text-primary-500 px-4 py-2 rounded-full mb-4">
             <ShieldCheck className="w-4 h-4" />
-            <span className="text-xs font-black uppercase tracking-widest">Secure Civic Portal</span>
+            <span className="text-[10px] font-black uppercase tracking-widest">Secure Civic Portal</span>
           </div>
           <h1 className="text-4xl font-black text-slate-900 tracking-tight">
-            {isRegister ? 'Join ElectionEase' : 'Welcome Back'}
+            {isRegister ? t('create_account') : t('welcome_back') || 'Welcome Back'}
           </h1>
         </div>
 
-        <div className="glass-card rounded-[2.5rem] p-8 shadow-2xl border border-white/50">
+        <div className="glass-card rounded-[2.5rem] p-8 shadow-2xl border border-white/10">
           <form onSubmit={handleSubmit} className="space-y-4">
             <AnimatePresence mode="wait">
               {isRegister && (
@@ -151,7 +153,7 @@ const Login = () => {
                    <button 
                     type="button"
                     onClick={() => alert('Forgot Password feature: We have sent a recovery link to your email.')}
-                    className="text-[10px] text-slate-400 hover:text-primary-600 font-bold uppercase tracking-tighter"
+                    className="text-[10px] text-slate-500 hover:text-primary-500 font-bold uppercase tracking-tighter"
                    >
                      Forgot Password?
                    </button>
@@ -162,7 +164,7 @@ const Login = () => {
             <div className="pt-2">
               <Button
                 type="submit"
-                className="w-full py-4 text-base font-black rounded-2xl flex items-center justify-center space-x-2 shadow-xl hover:shadow-primary-300 transition-all"
+                className="w-full py-4 text-base font-black rounded-2xl flex items-center justify-center space-x-2 shadow-xl hover:shadow-primary-500/20 transition-all"
                 disabled={isSubmitting}
               >
                 {isSubmitting ? (
@@ -170,7 +172,7 @@ const Login = () => {
                 ) : (
                   <>
                     {isRegister ? <UserPlus className="w-4 h-4" /> : <LogIn className="w-4 h-4" />}
-                    <span>{isRegister ? 'Create Account' : 'Sign In'}</span>
+                    <span>{isRegister ? t('create_account') : t('signin') || 'Sign In'}</span>
                     <ArrowRight className="w-4 h-4" />
                   </>
                 )}
@@ -178,30 +180,30 @@ const Login = () => {
             </div>
           </form>
 
-          <div className="mt-8 pt-6 border-t border-slate-100 text-center">
+          <div className="mt-8 pt-6 border-t border-slate-100/10 text-center">
             <button
               type="button"
               onClick={() => {
                 setIsRegister(!isRegister);
                 setPasswordError('');
               }}
-              className="text-sm text-slate-500 hover:text-primary-600 font-semibold transition-colors duration-200"
+              className="text-sm text-slate-500 hover:text-primary-500 font-semibold transition-colors duration-200"
             >
               {isRegister
                 ? 'Already have an account? '
                 : "Don't have an account? "}
-              <span className="text-primary-600 underline underline-offset-2">
-                {isRegister ? 'Sign in' : 'Sign up free'}
+              <span className="text-primary-500 underline underline-offset-2">
+                {isRegister ? t('signin') || 'Sign in' : 'Sign up free'}
               </span>
             </button>
           </div>
         </div>
 
-        <p className="text-center text-xs text-slate-400 mt-6">
+        <p className="text-center text-xs text-slate-500 mt-6">
           By continuing, you agree to our{' '}
-          <span className="text-primary-600 font-semibold cursor-pointer hover:underline">Terms of Service</span>
+          <span className="text-primary-500 font-semibold cursor-pointer hover:underline">Terms of Service</span>
           {' '}and{' '}
-          <span className="text-primary-600 font-semibold cursor-pointer hover:underline">Privacy Policy</span>.
+          <span className="text-primary-500 font-semibold cursor-pointer hover:underline">Privacy Policy</span>.
         </p>
       </motion.div>
     </div>

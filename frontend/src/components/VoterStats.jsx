@@ -6,7 +6,7 @@ import Card from './ui/Card';
 const VoterStats = () => {
   const stats = [
     { label: 'Total Registered', value: '96.8Cr', icon: Users, color: 'bg-[var(--status-info-bg)] text-[var(--status-info-text)]' },
-    { label: 'Youth Voters', value: '1.8Cr', icon: UserPlus, color: 'bg-primary-100 text-primary-600' },
+    { label: 'Youth Voters', value: '1.8Cr', icon: UserPlus, color: 'bg-[var(--primary-100)] text-[var(--primary-600)]' },
     { label: 'Ready to Vote', value: '82%', icon: CheckCircle, color: 'bg-[var(--status-success-bg)] text-[var(--status-success-text)]' },
     { label: 'Engagement', value: '+12%', icon: TrendingUp, color: 'bg-[var(--status-info-bg)] text-[var(--status-info-text)]' }
   ];
