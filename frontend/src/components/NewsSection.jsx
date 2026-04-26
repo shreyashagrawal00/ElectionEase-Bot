@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import API_URL from '../config/api';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import Card from './ui/Card';
@@ -14,7 +15,7 @@ const NewsSection = ({ stateFilter }) => {
     const fetchNews = async () => {
       setIsLoading(true);
       try {
-        const res = await axios.get(`http://127.0.0.1:5000/api/news?state=${stateFilter || ''}`);
+        const res = await axios.get(`${API_URL}/news?state=${stateFilter || ''}`);
         setArticles(res.data.articles || []);
       } catch (err) {
         console.error('Frontend News Error:', err);

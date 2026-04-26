@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import API_URL from '../config/api';
 import Card from '../components/ui/Card';
 import { useTranslation } from 'react-i18next';
 import { BookOpen, FileText, MapPin, CheckCircle2 } from 'lucide-react';
@@ -12,7 +13,7 @@ const KnowledgeBase = () => {
   useEffect(() => {
     const fetchElections = async () => {
       try {
-        const res = await axios.get('http://127.0.0.1:5000/api/elections');
+        const res = await axios.get(`${API_URL}/elections`);
         setElections(res.data);
       } catch(err) { console.error(err); }
     };

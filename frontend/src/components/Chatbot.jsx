@@ -3,6 +3,7 @@ import { MessageSquare, X, Send, Bot, User, Loader2, Sparkles, ArrowRight } from
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import axios from 'axios';
+import API_URL from '../config/api';
 
 const renderMarkdown = (text) => {
   if (!text) return { __html: '' };
@@ -96,7 +97,7 @@ const Chatbot = () => {
     setIsLoading(true);
 
     try {
-      const res = await axios.post('http://127.0.0.1:5000/api/chat', { 
+      const res = await axios.post(`${API_URL}/chat`, { 
         message: text,
         context: { 
           language: i18n.language,

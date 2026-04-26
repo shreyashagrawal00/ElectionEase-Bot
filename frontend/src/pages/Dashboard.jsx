@@ -13,6 +13,7 @@ import VoterStats from '../components/VoterStats';
 import IndiaMap from '../components/ui/IndiaMap';
 import CandidateCard from '../components/ui/CandidateCard';
 import { Target as MatchIcon, Zap } from 'lucide-react';
+import API_URL from '../config/api';
 
 const Dashboard = () => {
   const { user, loading, updateProgress, quizResults } = useAuth();
@@ -33,7 +34,7 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchElections = async () => {
       try {
-        let url = 'http://127.0.0.1:5000/api/elections';
+        let url = `${API_URL}/elections`;
         const params = new URLSearchParams();
         if (selectedState) params.append('state', selectedState);
         if (selectedDistrict) params.append('district', selectedDistrict);
@@ -53,7 +54,7 @@ const Dashboard = () => {
       }
       setHistoryLoading(true);
       try {
-        const res = await axios.get(`http://127.0.0.1:5000/api/elections/history/${encodeURIComponent(selectedState)}`);
+        const res = await axios.get(`${API_URL}/elections/history/${encodeURIComponent(selectedState)}`);
         setStateHistory(res.data);
       } catch (err) {
         console.error('Failed to fetch state history', err);

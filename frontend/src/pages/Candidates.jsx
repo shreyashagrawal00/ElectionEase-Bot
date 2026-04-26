@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import API_URL from '../config/api';
 import { Search, Filter, Users, MapPin, Loader2, ArrowRight, Zap } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
@@ -24,7 +25,7 @@ const Candidates = () => {
     const fetchCandidates = async () => {
       try {
         setLoading(true);
-        const res = await axios.get('http://127.0.0.1:5000/api/elections');
+        const res = await axios.get(`${API_URL}/elections`);
         
         // Flatten candidates from all elections and inject state context
         const allCandidates = res.data.flatMap(election => 

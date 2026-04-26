@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import axios from 'axios';
+import API_URL from '../config/api';
 
 const AuthContext = createContext();
 export const useAuth = () => useContext(AuthContext);
@@ -17,7 +18,7 @@ export const AuthProvider = ({ children }) => {
       const token = localStorage.getItem('token');
       if (token) {
         try {
-          const res = await axios.get('http://localhost:5000/api/auth/me', {
+          const res = await axios.get(`${API_URL}/auth/me`, {
             headers: { 'x-auth-token': token }
           });
           setUser(res.data);
@@ -31,13 +32,13 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const login = async (email, password) => {
-    const res = await axios.post('http://localhost:5000/api/auth/login', { email, password });
+    const res = await axios.post(`${API_URL}/auth/login`, { email, password });
     localStorage.setItem('token', res.data.token);
     setUser(res.data.user);
   };
 
   const register = async (name, email, password) => {
-    const res = await axios.post('http://localhost:5000/api/auth/register', { name, email, password });
+    const res = await axios.post(`${API_URL}/auth/register`, { name, email, password });
     localStorage.setItem('token', res.data.token);
     setUser(res.data.user);
   };
@@ -49,7 +50,7 @@ export const AuthProvider = ({ children }) => {
 
   const updateProgress = async (progress) => {
       const token = localStorage.getItem('token');
-      const res = await axios.put('http://localhost:5000/api/auth/progress', { progress }, {
+      const res = await axios.put(`${API_URL}/auth/progress`, { progress }, {
          headers: { 'x-auth-token': token }
       });
       setUser({...user, progress: res.data});
@@ -60,7 +61,7 @@ export const AuthProvider = ({ children }) => {
     if (!token) return; // Prevent crash if not logged in
     
     try {
-      const res = await axios.put('http://localhost:5000/api/auth/save-candidate', { candidate }, {
+      const res = await axios.put(`${API_URL}/auth/save-candidate`, { candidate }, {
          headers: { 'x-auth-token': token }
       });
       setUser({...user, savedCandidates: res.data});

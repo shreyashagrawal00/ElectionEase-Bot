@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, FileText, AlertTriangle, TrendingUp, TrendingDown, BookOpen, ExternalLink, Loader2 } from 'lucide-react';
 import axios from 'axios';
+import API_URL from '../../config/api';
 import Card from './Card';
 import Button from './Button';
 
@@ -23,7 +24,7 @@ const CandidateResearchModal = ({ isOpen, onClose, candidateName, researchUrl })
       setLoading(true);
       setError(null);
       try {
-        const res = await axios.get(`http://localhost:5000/api/elections/research?url=${encodeURIComponent(researchUrl)}`, {
+        const res = await axios.get(`${API_URL}/elections/research?url=${encodeURIComponent(researchUrl)}`, {
           timeout: 15000 // 15 second timeout
         });
         setData(res.data);
