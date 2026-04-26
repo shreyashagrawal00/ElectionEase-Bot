@@ -5,7 +5,7 @@ const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const connectDB = require('./config/db');
 const errorHandler = require('./middleware/errorMiddleware');
-const mongoSanitize = require('express-mongo-sanitize');
+// const mongoSanitize = require('express-mongo-sanitize');
 
 // Connect Database
 connectDB();
@@ -16,7 +16,7 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 app.use(helmet());
-app.use(mongoSanitize());
+// app.use(mongoSanitize()); // Disabled due to Express 5 incompatibility
 
 // Rate Limiting
 const limiter = rateLimit({
