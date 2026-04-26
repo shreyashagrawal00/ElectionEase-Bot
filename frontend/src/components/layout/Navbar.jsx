@@ -71,7 +71,7 @@ const Navbar = () => {
               </>
             ) : (
               <Link to="/login">
-                <Button className="px-6 py-2 text-sm font-bold">{t('get_started')}</Button>
+                <Button className="px-6 py-2 text-sm font-bold">{t('signin') || 'Sign In'}</Button>
               </Link>
             )}
           </div>
@@ -141,7 +141,7 @@ const Navbar = () => {
                 </>
               ) : (
                 <Link to="/login" onClick={() => setIsMenuOpen(false)} className="block pt-2">
-                  <Button className="w-full py-4 rounded-2xl justify-center font-bold">{t('get_started')}</Button>
+                  <Button className="w-full py-4 rounded-2xl justify-center font-bold">{t('signin') || 'Sign In'}</Button>
                 </Link>
               )}
             </div>
