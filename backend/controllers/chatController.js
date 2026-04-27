@@ -11,8 +11,8 @@ exports.getChatResponse = async (req, res) => {
 
   try {
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-    console.log('Initializing Gemini with model: gemini-1.5-flash');
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    console.log('Initializing Gemini with model: gemini-3-flash-preview');
+    const model = genAI.getGenerativeModel({ model: "gemini-3-flash-preview" });
 
     const { language, location } = context || { language: 'en' };
     const locationInfo = location 
@@ -46,8 +46,8 @@ exports.getChatResponse = async (req, res) => {
     let errorMessage = 'Failed to get response from AI';
     if (err.message && err.message.includes('API_KEY_INVALID')) {
         errorMessage = 'Invalid Gemini API Key. Please check your .env file.';
-    } else if (err.status === 429) {
-        errorMessage = 'Gemini API quota exceeded. Please try again later.';
+    } else if (err.status === 429 || (err.message && err.message.includes('429'))) {
+        errorMessage = 'Gemini API quota exceeded for this model. Please try again in a few seconds or check your API plan.';
     }
 
     res.status(500).json({ error: errorMessage, details: err.message });
