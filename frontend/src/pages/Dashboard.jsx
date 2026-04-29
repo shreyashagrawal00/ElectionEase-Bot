@@ -233,7 +233,7 @@ const Dashboard = () => {
 
         <div className="flex flex-col gap-10 h-full">
            {/* Step Progress Summary Card */}
-           <Card className="p-8 bg-slate-900 border-slate-800 text-white rounded-[2rem] shadow-2xl relative overflow-hidden group">
+           <Card className="p-8 bg-[#1e1b4b] border-slate-800 text-white rounded-[2rem] shadow-2xl relative overflow-hidden group">
               <div className="absolute -top-24 -right-24 w-64 h-64 bg-primary-500/20 rounded-full blur-3xl group-hover:bg-primary-500/30 transition-all duration-700"></div>
               <div className="relative z-10">
                 <h4 className="text-slate-400 text-xs font-black uppercase tracking-[0.2em] mb-4">{t('prep_roadmap')}</h4>
@@ -243,7 +243,7 @@ const Dashboard = () => {
                 <div className="flex items-center justify-between">
                   <div className="flex -space-x-2">
                     {[1, 2, 3].map(i => (
-                      <div key={i} className={`w-10 h-10 rounded-full border-2 border-slate-900 flex items-center justify-center font-bold text-xs ${i <= completedCount ? 'bg-primary-500 text-white' : 'bg-slate-800 text-slate-500'}`}>
+                      <div key={i} className={`w-10 h-10 rounded-full border-2 border-[#1e1b4b] flex items-center justify-center font-bold text-xs ${i <= completedCount ? 'bg-primary-500 text-white' : 'bg-white/10 text-slate-400'}`}>
                         {i}
                       </div>
                     ))}
