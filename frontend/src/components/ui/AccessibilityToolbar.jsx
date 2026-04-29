@@ -90,7 +90,7 @@ const AccessibilityToolbar = () => {
       <button
         onClick={() => setIsOpen(!isOpen)}
         className={`w-16 h-16 rounded-full shadow-2xl flex items-center justify-center transition-all duration-500 transform hover:scale-110 active:rotate-12 ${
-          isOpen || darkMode ? 'bg-slate-900 border-slate-800 text-white' : 'bg-white border-slate-200 text-primary-600'
+          isOpen || darkMode ? 'bg-primary-600 border-primary-500 text-white' : 'bg-white border-slate-200 text-primary-600'
         } border-2`}
       >
         <motion.div

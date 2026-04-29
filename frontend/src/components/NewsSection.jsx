@@ -55,7 +55,7 @@ const NewsSection = ({ stateFilter }) => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: idx * 0.1 }}
             >
-              <Card className="h-full flex flex-col hover:shadow-lg transition-shadow bg-white border-slate-100 overflow-hidden group">
+              <Card className="h-full flex flex-col hover:shadow-lg transition-shadow border-slate-100 overflow-hidden group">
                 {article.image && (
                   <div className="h-40 overflow-hidden">
                     <img 

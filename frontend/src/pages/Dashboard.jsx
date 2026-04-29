@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 import Card from '../components/ui/Card';
 import Button from '../components/ui/Button';
@@ -256,15 +256,15 @@ const Dashboard = () => {
            </Card>
            
            {/* Voter Match Quiz CTA */}
-           <Card className="p-8 bg-gradient-to-br from-indigo-950 to-slate-900 border-indigo-900 text-white rounded-[2.5rem] shadow-2xl relative overflow-hidden group">
+           <Card className="p-8 border-indigo-100 rounded-[2.5rem] shadow-2xl relative overflow-hidden group bg-indigo-600 text-white">
               <div className="absolute -top-24 -right-24 w-64 h-64 bg-indigo-500/20 rounded-full blur-3xl group-hover:bg-indigo-500/30 transition-all duration-700"></div>
               <div className="relative z-10">
                 <div className="w-14 h-14 bg-white/10 rounded-2xl flex items-center justify-center mb-6">
                    <MatchIcon className="w-7 h-7 text-indigo-400" />
                 </div>
-                <h4 className="text-slate-400 text-xs font-black uppercase tracking-[0.2em] mb-2">{t('matching_engine')}</h4>
-                <h3 className="text-2xl font-black mb-4 leading-tight">{t('match_values')}</h3>
-                <p className="text-slate-400 text-sm mb-8 leading-relaxed">{t('match_desc')}</p>
+                <h4 className="text-indigo-300 text-xs font-black uppercase tracking-[0.2em] mb-2">{t('matching_engine')}</h4>
+                <h3 className="text-2xl font-black mb-4 leading-tight text-white">{t('match_values')}</h3>
+                <p className="text-slate-300 text-sm mb-8 leading-relaxed">{t('match_desc')}</p>
                 <button 
                   onClick={() => navigate('/match')} 
                   className="w-full bg-white text-indigo-900 hover:bg-slate-100 font-black py-4 rounded-2xl shadow-xl transition-all hover:scale-[1.02]"
@@ -275,9 +275,9 @@ const Dashboard = () => {
            </Card>
 
            {/* Search/Discovery Tooltip */}
-           <div className="p-6 bg-primary-50/50 rounded-[2rem] border border-primary-100/50">
+           <div className="p-6 bg-primary-50/10 rounded-[2rem] border border-primary-100/50">
               <div className="flex items-start space-x-4">
-                <div className="p-3 bg-white rounded-2xl shadow-sm">
+                <div className="p-3 bg-surface rounded-2xl shadow-sm">
                    <Search className="w-6 h-6 text-primary-600" />
                 </div>
                 <div>
@@ -338,7 +338,7 @@ const Dashboard = () => {
         ) : (
           <div className="grid gap-6">
             {elections.map(election => (
-              <Card key={election._id} className="p-8 flex flex-col sm:flex-row justify-between items-center bg-white border-l-8 border-l-primary-500">
+              <Card key={election._id} className="p-8 flex flex-col sm:flex-row justify-between items-center border-l-8 border-l-primary-500">
                 <div className="mb-6 sm:mb-0">
                   <h3 className="text-2xl font-extrabold text-slate-900 mb-2">{getLocalized(election.title)}</h3>
                   <div className="flex items-center text-slate-500 font-medium">

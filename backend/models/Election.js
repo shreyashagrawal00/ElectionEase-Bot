@@ -3,7 +3,13 @@ const mongoose = require('mongoose');
 const LocalizedStringSchema = new mongoose.Schema({
   en: { type: String, required: true },
   hi: { type: String },
-  mr: { type: String }
+  mr: { type: String },
+  gu: { type: String },
+  bn: { type: String },
+  ta: { type: String },
+  te: { type: String },
+  ml: { type: String },
+  kn: { type: String }
 }, { _id: false });
 
 const StepSchema = new mongoose.Schema({

@@ -1,0 +1,10 @@
+const authController = require('./controllers/authController');
+const validate = require('./middleware/validate');
+console.log('--- DEBUG AUTH CONTROLLER ---');
+console.log('Keys:', Object.keys(authController));
+console.log('Register type:', typeof authController.register);
+console.log('Login type:', typeof authController.login);
+console.log('--- DEBUG VALIDATE ---');
+console.log('Keys:', Object.keys(validate));
+console.log('validateRegistration type:', typeof validate.validateRegistration);
+process.exit(0);

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { User, Briefcase, Target, ChevronDown, ChevronUp, Bookmark, FileText } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../hooks/useAuth';
 import { useCompare } from '../../context/CompareContext';
 import Card from './Card';
 import CandidateResearchModal from './CandidateResearchModal';
@@ -49,7 +49,7 @@ const CandidateCard = ({ candidate }) => {
     <>
       <Card className="p-0 overflow-hidden border border-slate-200/50 flex flex-col h-full shadow-2xl transition-all duration-500 hover:shadow-primary-100/20 group/card">
         {/* Header with Background Pattern */}
-        <div className="h-24 bg-slate-50 relative overflow-hidden flex items-center justify-center">
+        <div className="h-24 bg-surface/50 relative overflow-hidden flex items-center justify-center">
           <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#4f46e5_1px,transparent_1px)] [background-size:16px_16px]"></div>
           
           {/* Bookmark Button */}
@@ -125,7 +125,7 @@ const CandidateCard = ({ candidate }) => {
                   setIsResearchOpen(true);
                 }
               }}
-              className="w-full mt-4 flex items-center justify-center space-x-2 bg-slate-900 text-white py-3 rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-primary-600 transition-all shadow-xl shadow-slate-200"
+              className="w-full mt-4 flex items-center justify-center space-x-2 bg-primary-600 text-white py-3 rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-primary-700 transition-all shadow-xl shadow-primary-200"
             >
               <FileText className="w-4 h-4" />
               <span>Deep Research Report</span>
@@ -159,7 +159,7 @@ const CandidateCard = ({ candidate }) => {
                         initial={{ x: -10, opacity: 0 }}
                         animate={{ x: 0, opacity: 1 }}
                         transition={{ delay: i * 0.1 }}
-                        className="flex items-center text-sm text-slate-700 bg-slate-50/50 p-2 rounded-lg border border-slate-100/50"
+                        className="flex items-center text-sm text-slate-700 bg-surface/50 p-2 rounded-lg border border-slate-100/50"
                       >
                         <div className="w-1.5 h-1.5 rounded-full bg-primary-500 mr-2 flex-shrink-0"></div>
                         {item}

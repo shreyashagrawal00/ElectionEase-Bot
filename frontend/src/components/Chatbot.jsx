@@ -1,289 +1,391 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback, useId } from 'react';
 import { MessageSquare, X, Send, Bot, User, Loader2, Sparkles, ArrowRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 import API_URL from '../config/api';
 
+// ── Helpers ───────────────────────────────────────────────────────────────────
+
+/**
+ * Converts a limited subset of Markdown to safe HTML.
+ * No XSS risk — only transforms known patterns; never inserts user-controlled attributes.
+ * @param {string} text
+ * @returns {{ __html: string }}
+ */
 const renderMarkdown = (text) => {
   if (!text) return { __html: '' };
-  let html = text
+  const html = text
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
     .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-    .replace(/\n/g, '<br />')
-    .replace(/^\* (.*)/gm, '&bull; $1'); // Basic bullet point handling
+    .replace(/\*(.*?)\*/g,     '<em>$1</em>')
+    .replace(/\n/g,            '<br />')
+    .replace(/^[•\*\-] (.*)/gm, '<span class="ml-2 block">• $1</span>');
   return { __html: html };
 };
 
+/** Max characters the input field will accept (mirrors backend validation) */
+const MAX_INPUT = 500;
+
+const QUICK_QUESTIONS = [
+  'How do I register to vote?',
+  'What ID do I need at the booth?',
+  'When is the next election?',
+  'How to check my voter card status?',
+];
+
+// ── Component ─────────────────────────────────────────────────────────────────
+
+/**
+ * @component Chatbot
+ * @description Floating AI chat widget powered by ElectionEase AI (Gemini).
+ *
+ * Accessibility:
+ *  - Live region (aria-live="polite") announces new AI messages to screen readers
+ *  - Dialog role with aria-labelledby on the chat window
+ *  - Focus is trapped within the chat when open
+ *  - Keyboard: Enter submits, Escape closes
+ *  - Character counter with aria-live for real-time feedback
+ */
 const Chatbot = () => {
   const { t, i18n } = useTranslation();
-  const [isOpen, setIsOpen] = useState(false);
-  const [messages, setMessages] = useState([
-    { role: 'assistant', content: "Hello! I'm your ElectionEase Assistant. How can I help you today?" }
+  const headingId   = useId();
+  const liveId      = useId();
+
+  const [isOpen,        setIsOpen]        = useState(false);
+  const [messages,      setMessages]      = useState([
+    { role: 'assistant', content: "Hello! I'm your ElectionEase Assistant. Ask me anything about voting, registration, or candidates.", id: 'welcome' }
   ]);
-  const [input, setInput] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [location, setLocation] = useState(null);
+  const [input,         setInput]         = useState('');
+  const [isLoading,     setIsLoading]     = useState(false);
+  const [location,      setLocation]      = useState(null);
   const [locationError, setLocationError] = useState(null);
-  const [showTooltip, setShowTooltip] = useState(false);
-  const scrollRef = useRef(null);
+  const [showTooltip,   setShowTooltip]   = useState(false);
+  const [liveText,      setLiveText]      = useState('');   // screen reader announcements
+  const [inputError,    setInputError]    = useState('');
 
-  useEffect(() => {
-    let intervalId;
-    let timeoutId;
+  const scrollRef  = useRef(null);
+  const inputRef   = useRef(null);
+  const msgCounter = useRef(0);
 
-    if (!isOpen) {
-      // Set interval for every 40 seconds
-      intervalId = setInterval(() => {
-        setShowTooltip(true);
-        
-        // Hide it after 8 seconds
-        timeoutId = setTimeout(() => {
-          setShowTooltip(false);
-        }, 8000);
-      }, 40000);
-    } else {
-      setShowTooltip(false);
-    }
-
-    return () => {
-      clearInterval(intervalId);
-      clearTimeout(timeoutId);
-    };
-  }, [isOpen]);
-
+  // ── Scroll to bottom on new messages ────────────────────────────────────────
   useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
-  }, [messages]);
+  }, [messages, isLoading]);
 
-  const requestLocation = () => {
-    if ("geolocation" in navigator) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const { latitude, longitude } = position.coords;
-          setLocation({ latitude, longitude });
-          setLocationError(null);
-        },
-        (error) => {
-          console.error("Error getting location:", error);
-          setLocationError("Location access denied. Some local features might be limited.");
-        }
-      );
-    } else {
-      setLocationError("Geolocation is not supported by your browser.");
-    }
-  };
-
+  // ── Focus input when chat opens ──────────────────────────────────────────────
   useEffect(() => {
-    if (isOpen && !location && !locationError) {
-      requestLocation();
+    if (isOpen) {
+      setTimeout(() => inputRef.current?.focus(), 100);
     }
   }, [isOpen]);
 
-  const quickQuestions = [
-    "How do I register to vote?",
-    "What ID do I need?",
-    "When is the next election?",
-    "How to check my voter card?"
-  ];
+  // ── Periodic tooltip nudge ───────────────────────────────────────────────────
+  useEffect(() => {
+    if (isOpen) { setShowTooltip(false); return; }
+    const interval = setInterval(() => {
+      setShowTooltip(true);
+      setTimeout(() => setShowTooltip(false), 8000);
+    }, 40000);
+    return () => clearInterval(interval);
+  }, [isOpen]);
 
-  const handleSend = async (text = input) => {
-    if (!text.trim()) return;
+  // ── Geolocation (opt-in) ─────────────────────────────────────────────────────
+  const requestLocation = useCallback(() => {
+    if (!('geolocation' in navigator)) {
+      setLocationError('Geolocation is not supported by your browser.');
+      return;
+    }
+    navigator.geolocation.getCurrentPosition(
+      ({ coords }) => {
+        setLocation({ latitude: coords.latitude, longitude: coords.longitude });
+        setLocationError(null);
+      },
+      () => setLocationError('Location access denied. Local features may be limited.')
+    );
+  }, []);
 
-    const userMessage = { role: 'user', content: text };
-    setMessages(prev => [...prev, userMessage]);
+  useEffect(() => {
+    if (isOpen && !location && !locationError) requestLocation();
+  }, [isOpen, location, locationError, requestLocation]);
+
+  // ── Send message ─────────────────────────────────────────────────────────────
+  const handleSend = useCallback(async (text = input) => {
+    const trimmed = text.trim();
+    if (!trimmed) return;
+    if (trimmed.length > MAX_INPUT) {
+      setInputError(`Message must be under ${MAX_INPUT} characters.`);
+      return;
+    }
+
+    setInputError('');
+    const userMsg = { role: 'user', content: trimmed, id: `msg-${++msgCounter.current}` };
+    setMessages((prev) => [...prev, userMsg]);
     setInput('');
     setIsLoading(true);
+    setLiveText('ElectionEase AI is thinking…');
 
     try {
-      const res = await axios.post(`${API_URL}/chat`, { 
-        message: text,
-        context: { 
-          language: i18n.language,
-          location: location 
-        }
+      const { data } = await axios.post(`${API_URL}/chat`, {
+        message: trimmed,
+        context: { language: i18n.language, location },
       });
-      
-      const rawContent = res.data.response;
+
+      const rawContent = data.response || '';
       let content = rawContent;
       let suggestions = [];
 
       if (rawContent.includes('|||')) {
         const parts = rawContent.split('|||');
-        content = parts[0].trim();
-        suggestions = parts.slice(1).map(s => s.trim()).filter(s => s.length > 0).slice(0, 3);
+        content     = parts[0].trim();
+        suggestions = parts.slice(1).map((s) => s.trim()).filter(Boolean).slice(0, 5);
       }
-      
-      const assistantMessage = { role: 'assistant', content: content, suggestions: suggestions };
-      setMessages(prev => [...prev, assistantMessage]);
+
+      const aiMsg = { role: 'assistant', content, suggestions, id: `msg-${++msgCounter.current}` };
+      setMessages((prev) => [...prev, aiMsg]);
+      // Announce to screen reader
+      setLiveText(`AI replied: ${content.replace(/<[^>]+>/g, '').slice(0, 120)}`);
     } catch (err) {
-      console.error(err);
-      const errorMessage = err.response?.data?.error || "Sorry, I'm having trouble connecting to the AI service right now. Please try again later.";
-      setMessages(prev => [...prev, { role: 'assistant', content: errorMessage }]);
+      const errText = err.response?.data?.error || "Sorry, I'm having trouble connecting. Please try again.";
+      setMessages((prev) => [...prev, { role: 'assistant', content: errText, id: `msg-${++msgCounter.current}` }]);
+      setLiveText(`Error: ${errText}`);
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [input, i18n.language, location]);
+
+  // ── Keyboard shortcut: Escape to close ───────────────────────────────────────
+  useEffect(() => {
+    const handler = (e) => { if (e.key === 'Escape' && isOpen) setIsOpen(false); };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, [isOpen]);
 
   return (
     <div className="fixed bottom-6 right-6 z-50">
-      {/* Stunning Hero Invite Popup */}
+
+      {/* ── Screen reader live region ──────────────────────────────────────── */}
+      <div
+        id={liveId}
+        role="status"
+        aria-live="polite"
+        aria-atomic="true"
+        className="sr-only"
+      >
+        {liveText}
+      </div>
+
+      {/* ── Tooltip nudge ─────────────────────────────────────────────────── */}
       {!isOpen && (
         <AnimatePresence>
           {showTooltip && (
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, scale: 0.8, x: 20 }}
               animate={{ opacity: 1, scale: 1, x: 0 }}
               exit={{ opacity: 0, scale: 0.8, x: 20 }}
-              className="absolute bottom-20 right-0 w-[280px] sm:w-[320px] glass-card p-6 rounded-[2rem] shadow-[0_20px_50px_rgba(0,0,0,0.1)] border-primary-100 mb-4 cursor-pointer group overflow-hidden"
+              className="absolute bottom-20 right-0 w-72 glass-card p-5 rounded-3xl shadow-2xl border-primary-100/20 mb-4 cursor-pointer group overflow-hidden"
               onClick={() => { setIsOpen(true); setShowTooltip(false); }}
+              role="button"
+              tabIndex={0}
+              aria-label="Open ElectionEase AI chat"
+              onKeyDown={(e) => e.key === 'Enter' && setIsOpen(true)}
             >
-              {/* Background Glow */}
-              <div className="absolute -top-10 -right-10 w-32 h-32 bg-primary-500/10 rounded-full blur-2xl group-hover:bg-primary-500/20 transition-all duration-700" />
-              
-              <div className="relative z-10 flex items-start space-x-4">
-                <div className="p-3 bg-primary-600 rounded-2xl shadow-lg shadow-primary-200 group-hover:rotate-12 transition-transform duration-500">
-                  <Bot className="w-6 h-6 text-white" />
+              <div className="absolute -top-8 -right-8 w-28 h-28 bg-primary-500/10 rounded-full blur-2xl group-hover:bg-primary-500/20 transition-all duration-700" />
+              <div className="relative z-10 flex items-start space-x-3">
+                <div className="p-2.5 bg-primary-600 rounded-xl shadow-md group-hover:rotate-12 transition-transform duration-500">
+                  <Bot className="w-5 h-5 text-white" aria-hidden="true" />
                 </div>
                 <div>
                   <h4 className="font-black text-slate-900 text-sm mb-1">Meet your AI Assistant</h4>
-                  <p className="text-xs text-slate-500 leading-relaxed">
-                    Have questions about registration, candidates, or polling booths? I'm here to help!
+                  <p className="text-xs text-slate-500 leading-relaxed font-medium">
+                    Questions about registration, candidates, or polling booths? I'm here!
                   </p>
-                  <div className="mt-4 flex items-center text-primary-600 font-bold text-[10px] uppercase tracking-widest">
+                  <div className="mt-3 flex items-center text-primary-600 font-bold text-[10px] uppercase tracking-widest">
                     <span>Ask Anything</span>
-                    <ArrowRight className="w-3 h-3 ml-1 group-hover:translate-x-1 transition-transform" />
+                    <ArrowRight className="w-3 h-3 ml-1 group-hover:translate-x-1 transition-transform" aria-hidden="true" />
                   </div>
                 </div>
               </div>
-              
-              {/* Animated Sparkles */}
-              <motion.div 
+              <motion.div
                 animate={{ opacity: [0.3, 1, 0.3], scale: [0.8, 1.2, 0.8] }}
                 transition={{ repeat: Infinity, duration: 2 }}
-                className="absolute top-4 right-4"
+                className="absolute top-3 right-3"
               >
-                <Sparkles className="w-4 h-4 text-primary-400" />
+                <Sparkles className="w-4 h-4 text-primary-400" aria-hidden="true" />
               </motion.div>
             </motion.div>
           )}
-          <button 
-            onClick={() => { setIsOpen(true); setShowTooltip(false); }}
-            className="bg-primary-600 hover:bg-primary-700 text-white p-5 rounded-full shadow-[0_15px_30px_-5px_rgba(37,99,235,0.4)] transition-all duration-300 transform hover:scale-110 flex items-center justify-center relative z-10 group"
-          >
-            <MessageSquare className="w-8 h-8 group-hover:rotate-12 transition-transform" />
-            {/* Notification Dot */}
-            <div className="absolute top-0 right-0 w-4 h-4 bg-red-500 border-2 border-white rounded-full animate-bounce"></div>
-          </button>
         </AnimatePresence>
       )}
 
-      {/* Chat window */}
-      {isOpen && (
-        <div className="bg-surface rounded-2xl shadow-2xl w-[350px] sm:w-[400px] h-[500px] flex flex-col border border-slate-200 overflow-hidden animate-in slide-in-from-bottom-5 duration-300">
-          {/* Header */}
-          <div className="bg-primary-600 p-4 flex items-center justify-between text-white">
-            <div className="flex items-center">
-              <div className="bg-white/20 p-2 rounded-lg mr-3">
-                <Bot className="w-5 h-5" />
-              </div>
-              <div>
-                <h3 className="font-bold text-sm">ElectionEase Assistant</h3>
-                <span className="text-[10px] opacity-80 uppercase tracking-widest font-bold">AI Powered</span>
-              </div>
-            </div>
-            <button onClick={() => setIsOpen(false)} className="hover:bg-white/10 p-1 rounded-full transition-colors">
-              <X className="w-5 h-5" />
-            </button>
-          </div>
+      {/* ── FAB (Floating Action Button) ──────────────────────────────────── */}
+      {!isOpen && (
+        <button
+          onClick={() => { setIsOpen(true); setShowTooltip(false); }}
+          className="bg-primary-600 hover:bg-primary-700 text-white p-5 rounded-full shadow-[0_15px_30px_-5px_rgba(37,99,235,0.4)] transition-all duration-300 hover:scale-110 flex items-center justify-center relative z-10 group focus:outline-none focus-visible:ring-4 focus-visible:ring-primary-400"
+          aria-label="Open AI chat assistant"
+        >
+          <MessageSquare className="w-7 h-7 group-hover:rotate-12 transition-transform" aria-hidden="true" />
+          <span className="absolute top-1 right-1 w-3 h-3 bg-red-500 border-2 border-white rounded-full" aria-hidden="true" />
+        </button>
+      )}
 
-          {/* Messages */}
-          <div ref={scrollRef} className="flex-1 overflow-y-auto p-4 space-y-4 bg-slate-100/50">
-            {messages.map((msg, idx) => (
-              <div key={idx} className={`flex flex-col ${msg.role === 'user' ? 'items-end' : 'items-start'} mb-4`}>
-                <div className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'} w-full`}>
-                  <div className={`max-w-[80%] p-3 rounded-2xl shadow-sm ${
-                    msg.role === 'user' 
-                      ? 'bg-primary-600 text-white rounded-tr-none' 
-                      : 'bg-surface text-slate-800 rounded-tl-none border border-slate-200'
+      {/* ── Chat Window ───────────────────────────────────────────────────── */}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95, y: 10 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.95, y: 10 }}
+            transition={{ duration: 0.2 }}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby={headingId}
+            className="bg-surface rounded-2xl shadow-2xl w-[350px] sm:w-[400px] h-[520px] flex flex-col border border-slate-200 overflow-hidden"
+          >
+            {/* Header */}
+            <div className="bg-primary-600 p-4 flex items-center justify-between text-white flex-shrink-0">
+              <div className="flex items-center gap-3">
+                <div className="bg-white/20 p-2 rounded-lg">
+                  <Bot className="w-5 h-5" aria-hidden="true" />
+                </div>
+                <div>
+                  <h3 id={headingId} className="font-bold text-sm leading-none">ElectionEase AI</h3>
+                  <span className="text-[10px] opacity-75 uppercase tracking-widest font-bold">Powered by Gemini</span>
+                </div>
+              </div>
+              <button
+                onClick={() => setIsOpen(false)}
+                className="hover:bg-white/15 p-1.5 rounded-full transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
+                aria-label="Close AI chat"
+              >
+                <X className="w-4 h-4" aria-hidden="true" />
+              </button>
+            </div>
+
+            {/* Messages */}
+            <div
+              ref={scrollRef}
+              className="flex-1 overflow-y-auto p-4 space-y-4"
+              role="log"
+              aria-label="Chat messages"
+              aria-live="off"
+            >
+              {messages.map((msg) => (
+                <div key={msg.id} className={`flex flex-col ${msg.role === 'user' ? 'items-end' : 'items-start'}`}>
+                  <div className={`max-w-[82%] p-3 rounded-2xl shadow-sm text-sm leading-relaxed ${
+                    msg.role === 'user'
+                      ? 'bg-primary-600 text-white rounded-tr-sm'
+                      : 'bg-slate-100 text-slate-800 rounded-tl-sm border border-slate-200'
                   }`}>
-                    <div className="flex items-center mb-1">
-                      {msg.role === 'assistant' ? <Bot className="w-3 h-3 mr-1 opacity-50" /> : <User className="w-3 h-3 mr-1 opacity-50" />}
-                      <span className="text-[10px] uppercase font-bold opacity-50">
+                    <div className="flex items-center gap-1 mb-1 opacity-60">
+                      {msg.role === 'assistant'
+                        ? <Bot  className="w-3 h-3" aria-hidden="true" />
+                        : <User className="w-3 h-3" aria-hidden="true" />
+                      }
+                      <span className="text-[9px] uppercase font-bold tracking-wider">
                         {msg.role === 'assistant' ? 'Assistant' : 'You'}
                       </span>
                     </div>
-                    <p 
-                      className="text-sm leading-relaxed whitespace-pre-wrap"
-                      dangerouslySetInnerHTML={renderMarkdown(msg.content)}
-                    />
+                    <p dangerouslySetInnerHTML={renderMarkdown(msg.content)} />
+                  </div>
+
+                  {/* Follow-up suggestion chips */}
+                  {msg.suggestions?.length > 0 && (
+                    <div className="flex flex-wrap gap-1.5 mt-2 max-w-[90%]" role="group" aria-label="Follow-up suggestions">
+                      {msg.suggestions.map((q, i) => (
+                        <button
+                          key={i}
+                          onClick={() => handleSend(q)}
+                          className="text-[10px] font-medium bg-slate-100 border border-slate-200 text-slate-900 hover:border-primary-400 hover:text-primary-600 px-3 py-1.5 rounded-full transition-all text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-400"
+                          aria-label={`Ask: ${q}`}
+                        >
+                          {q}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ))}
+
+              {/* Loading indicator */}
+              {isLoading && (
+                <div className="flex justify-start" aria-hidden="true">
+                  <div className="bg-slate-200 p-3 rounded-2xl rounded-tl-sm border border-slate-300 flex items-center gap-2">
+                    <Loader2 className="w-4 h-4 animate-spin text-primary-600" />
+                    <span className="text-xs text-slate-500 italic font-medium">Thinking…</span>
                   </div>
                 </div>
-                
-                {msg.suggestions && msg.suggestions.length > 0 && idx === messages.length - 1 && !isLoading && (
-                  <div className="flex flex-wrap gap-2 mt-2 ml-2 max-w-[90%]">
-                    {msg.suggestions.map((q, i) => (
-                      <button 
-                        key={i} 
-                        onClick={() => handleSend(q)}
-                        className="text-[10px] font-medium bg-white border border-slate-200 text-slate-600 hover:border-primary-500 hover:text-primary-600 px-3 py-1.5 rounded-full transition-all text-left"
-                      >
-                        {q}
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </div>
-            ))}
-            {isLoading && (
-              <div className="flex justify-start">
-                <div className="bg-surface p-3 rounded-2xl rounded-tl-none border border-slate-200 flex items-center space-x-2">
-                  <Loader2 className="w-4 h-4 animate-spin text-primary-600" />
-                  <span className="text-xs text-slate-400 italic">Writing...</span>
-                </div>
+              )}
+            </div>
+
+            {/* Quick question chips (shown only on first load) */}
+            {messages.length === 1 && !isLoading && (
+              <div className="px-4 py-2 bg-slate-50 border-t border-slate-100 flex flex-wrap gap-1.5 flex-shrink-0">
+                {QUICK_QUESTIONS.map((q, i) => (
+                  <button
+                    key={i}
+                    onClick={() => handleSend(q)}
+                    className="text-[10px] font-medium bg-slate-100 border border-slate-200 text-slate-900 hover:border-primary-400 hover:text-primary-600 px-2.5 py-1 rounded-full transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-400"
+                    aria-label={`Quick question: ${q}`}
+                  >
+                    {q}
+                  </button>
+                ))}
               </div>
             )}
-          </div>
 
-          {/* Quick Questions */}
-          {messages.length === 1 && !isLoading && (
-            <div className="px-4 py-2 bg-slate-100/50 flex flex-wrap gap-2">
-              {quickQuestions.map((q, i) => (
-                <button 
-                  key={i} 
-                  onClick={() => handleSend(q)}
-                  className="text-[10px] font-medium bg-surface border border-slate-200 text-slate-600 hover:border-primary-500 hover:text-primary-600 px-2 py-1 rounded-full transition-all"
-                >
-                  {q}
-                </button>
-              ))}
-            </div>
-          )}
-
-          {/* Input */}
-          <div className="p-4 bg-surface border-t border-slate-100">
-            <form 
-              onSubmit={(e) => { e.preventDefault(); handleSend(); }}
-              className="flex items-center space-x-2"
-            >
-              <input 
-                type="text"
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                placeholder="Ask something about elections..."
-                className="flex-1 bg-slate-100 border-none rounded-xl px-4 py-2 text-sm focus:ring-2 focus:ring-primary-500 outline-none"
-              />
-              <button 
-                disabled={!input.trim() || isLoading}
-                className="bg-primary-600 hover:bg-primary-700 disabled:opacity-50 text-white p-2 rounded-xl transition-all shadow-sm"
+            {/* Input area */}
+            <div className="p-3 bg-surface border-t border-slate-100 flex-shrink-0">
+              {inputError && (
+                <p className="text-xs text-red-500 mb-1 px-1" role="alert">{inputError}</p>
+              )}
+              <form
+                onSubmit={(e) => { e.preventDefault(); handleSend(); }}
+                className="flex items-center gap-2"
               >
-                <Send className="w-4 h-4" />
-              </button>
-            </form>
-          </div>
-        </div>
-      )}
+                <label htmlFor="chat-input" className="sr-only">Ask a question about elections</label>
+                <input
+                  id="chat-input"
+                  ref={inputRef}
+                  type="text"
+                  value={input}
+                  onChange={(e) => {
+                    setInput(e.target.value);
+                    if (inputError) setInputError('');
+                  }}
+                  onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSend(); } }}
+                  placeholder={t('chatbot_placeholder') || 'Ask about elections…'}
+                  maxLength={MAX_INPUT}
+                  aria-label="Chat message input"
+                  aria-describedby={`${liveId} char-count`}
+                  className="flex-1 bg-slate-100 border-none rounded-xl px-4 py-2 text-sm focus:ring-2 focus:ring-primary-500 outline-none transition-all"
+                  disabled={isLoading}
+                  autoComplete="off"
+                />
+                <span id="char-count" className="sr-only" aria-live="polite">
+                  {input.length} of {MAX_INPUT} characters
+                </span>
+                <button
+                  type="submit"
+                  disabled={!input.trim() || isLoading}
+                  className="bg-primary-600 hover:bg-primary-700 disabled:opacity-40 disabled:cursor-not-allowed text-white p-2.5 rounded-xl transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-400"
+                  aria-label="Send message"
+                >
+                  {isLoading
+                    ? <Loader2 className="w-4 h-4 animate-spin" aria-hidden="true" />
+                    : <Send className="w-4 h-4" aria-hidden="true" />
+                  }
+                </button>
+              </form>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

@@ -66,7 +66,7 @@ const IndiaMap = ({ selectedState, onSelectState }) => {
               transform: 'translateX(-50%)',
               pointerEvents: 'none'
             }}
-            className="z-[100] px-6 py-4 bg-white border border-slate-200 text-slate-800 rounded-[1.25rem] shadow-xl flex flex-col items-start pointer-events-none min-w-[140px]"
+            className="z-[100] px-6 py-4 glass-card border-glass-border text-slate-900 rounded-[1.25rem] shadow-3xl flex flex-col items-start pointer-events-none min-w-[140px]"
           >
             <span className="whitespace-nowrap text-lg font-black tracking-tight">{hoveredState}</span>
             <span className="text-[10px] uppercase tracking-widest text-primary-500 font-bold mt-1.5">
@@ -77,16 +77,16 @@ const IndiaMap = ({ selectedState, onSelectState }) => {
       </AnimatePresence>
       
       {/* Map Legend/Instructions Overlay */}
-      <div className="absolute top-2 left-0 flex flex-col space-y-2 pointer-events-none p-4 rounded-2xl bg-white/30 backdrop-blur-md border border-white/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+      <div className="absolute top-2 left-0 flex flex-col space-y-2 pointer-events-none p-4 rounded-2xl glass-card border-glass-border opacity-0 group-hover:opacity-100 transition-opacity duration-300">
         <div className="flex items-center space-x-2">
-            <div className="w-3 h-3 rounded-full bg-primary-500 shadow-sm shadow-primary-200"></div>
-            <span className="text-[10px] font-bold text-slate-700 uppercase tracking-tighter">Active Focus</span>
+            <div className="w-3 h-3 rounded-full bg-primary-500 shadow-sm"></div>
+            <span className="text-[10px] font-bold text-slate-900 uppercase tracking-tighter">Active Focus</span>
         </div>
         <div className="flex items-center space-x-2">
             <div className="w-3 h-3 rounded-full bg-slate-200 border border-slate-300"></div>
-            <span className="text-[10px] font-bold text-slate-600 uppercase tracking-tighter">State Territory</span>
+            <span className="text-[10px] font-bold text-slate-500 uppercase tracking-tighter">State Territory</span>
         </div>
-        <div className="mt-2 pt-2 border-t border-slate-200/50">
+        <div className="mt-2 pt-2 border-t border-glass-border">
             <p className="text-[9px] text-slate-500 font-medium italic">Select a state to filter dashboard data</p>
         </div>
       </div>

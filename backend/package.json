@@ -1,14 +1,44 @@
 {
   "name": "election-ease-backend",
   "version": "1.0.0",
-  "description": "",
+  "description": "ElectionEase-Bot backend API — Node.js, Express 5, MongoDB, Google Gemini AI",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
-    "test": "jest"
+    "test": "cross-env NODE_ENV=test jest --forceExit --detectOpenHandles",
+    "test:watch": "cross-env NODE_ENV=test jest --watch",
+    "test:coverage": "cross-env NODE_ENV=test jest --coverage --forceExit"
   },
-  "keywords": [],
+  "jest": {
+    "testEnvironment": "node",
+    "testMatch": ["**/__tests__/**/*.test.js"],
+    "testTimeout": 10000,
+    "verbose": true,
+    "coverageThreshold": {
+      "global": {
+        "branches": 60,
+        "functions": 60,
+        "lines": 60,
+        "statements": 60
+      }
+    },
+    "collectCoverageFrom": [
+      "controllers/**/*.js",
+      "services/**/*.js",
+      "middleware/**/*.js",
+      "models/**/*.js",
+      "!**/node_modules/**"
+    ]
+  },
+  "keywords": [
+    "election",
+    "gemini",
+    "ai",
+    "nodejs",
+    "express",
+    "mongodb"
+  ],
   "author": "",
   "license": "ISC",
   "dependencies": {
@@ -26,6 +56,7 @@
     "mongoose": "^9.5.0"
   },
   "devDependencies": {
+    "cross-env": "^7.0.3",
     "jest": "^30.3.0",
     "nodemon": "^3.1.14",
     "supertest": "^7.2.2"

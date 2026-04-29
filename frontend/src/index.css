@@ -6,21 +6,26 @@
 @tailwind utilities;
 
 :root {
-  --primary: 161 72% 38%;
+  --primary: 221 83% 53%; /* Vivid Blue */
   --primary-foreground: 0 0% 100%;
   --secondary: 222 47% 11%;
   --secondary-foreground: 210 40% 98%;
-  --accent: 142 71% 45%;
+  --accent: 262 83% 58%; /* Vibrant Purple */
   --glass: rgba(255, 255, 255, 0.7);
   --glass-border: rgba(255, 255, 255, 0.4);
+  --mesh-gradient: radial-gradient(at 0% 0%, hsla(253,16%,7%,1) 0, transparent 50%), 
+                   radial-gradient(at 50% 0%, hsla(225,39%,30%,1) 0, transparent 50%), 
+                   radial-gradient(at 100% 0%, hsla(339,49%,30%,1) 0, transparent 50%);
 }
 
 @layer base {
   body {
     background-color: var(--slate-50);
     color: var(--slate-900);
-    @apply font-sans antialiased selection:bg-primary-100 selection:text-primary-900;
-    font-family: 'Inter', system-ui, sans-serif;
+    @apply font-sans antialiased selection:bg-primary-500 selection:text-white;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    scroll-behavior: smooth;
+    text-rendering: optimizeLegibility;
   }
   
   h1, h2, h3, h4 {
@@ -44,11 +49,28 @@
 
   .premium-gradient {
     @apply bg-gradient-to-br from-primary-600 via-primary-500 to-accent-500;
+    background-size: 200% 200%;
+    animation: gradient-shift 8s ease infinite;
   }
   
   .text-glow {
-    text-shadow: 0 0 20px rgba(22, 163, 74, 0.35);
+    text-shadow: 0 0 30px hsla(var(--primary), 0.4);
   }
+
+  .animate-pulse-subtle {
+    animation: pulse-subtle 3s ease-in-out infinite;
+  }
+}
+
+@keyframes gradient-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes pulse-subtle {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.85; }
 }
 
 /* Base focus styles for accessibility */
@@ -117,10 +139,10 @@ html.text-large { font-size: 20px; }
   --glass: rgba(255, 255, 255, 0.7);
   --glass-border: rgba(255, 255, 255, 0.4);
   
-  --map-fill: #f8fafc;
-  --map-stroke: #cbd5e1;
-  --map-hover: #dcfce7;
-  --map-selected: #16a34a;
+  --map-fill: #f1f5f9;
+  --map-stroke: #94a3b8;
+  --map-hover: #dbeafe;
+  --map-selected: #2563eb;
 
   --status-info-bg: #e0f2fe;
   --status-info-text: #0369a1;
@@ -177,7 +199,12 @@ html.text-large { font-size: 20px; }
   --status-warning-text: #FFC85C;
 
   background-color: var(--slate-50) !important;
-  color: var(--slate-900) !important;
+  color: var(--slate-900);
+}
+
+.high-contrast .bg-primary-600,
+.high-contrast .bg-primary-500 {
+  color: #1E104E !important;
 }
 
 .dark {
@@ -198,33 +225,33 @@ html.text-large { font-size: 20px; }
   --accent-600: #34d399;
   --accent-700: #6ee7b7;
 
-  --slate-50: #02040a; /* Deepest Obsidian */
-  --slate-100: #090e1a; /* Very Dark Surface */
-  --slate-200: #111827;
-  --slate-300: #1f2937;
-  --slate-400: #374151;
-  --slate-500: #4b5563;
-  --slate-600: #6b7280;
-  --slate-700: #9ca3af;
-  --slate-800: #d1d5db;
-  --slate-900: #f3f4f6;
+  --slate-50: #020617; /* Deepest Navy/Black */
+  --slate-100: #0f172a;
+  --slate-200: #1e293b;
+  --slate-300: #334155;
+  --slate-400: #475569;
+  --slate-500: #94a3b8; /* Lighter for secondary text */
+  --slate-600: #cbd5e1;
+  --slate-700: #e2e8f0;
+  --slate-800: #f1f5f9;
+  --slate-900: #f8fafc;
   --slate-950: #ffffff;
 
-  --surface: #050810;
-  --glass: rgba(3, 7, 18, 0.9); /* Darker Glass */
-  --glass-border: rgba(255, 255, 255, 0.05);
+  --surface: #0b0f1a;
+  --glass: rgba(15, 23, 42, 0.8);
+  --glass-border: rgba(255, 255, 255, 0.1);
   
-  --map-fill: #090e1a;
-  --map-stroke: #1f2937;
-  --map-hover: #064e3b;
+  --map-fill: #1e293b;
+  --map-stroke: #334155;
+  --map-hover: #3b82f6;
   --map-selected: #10b981;
 
   --status-info-bg: #1e3a8a;
-  --status-info-text: #bfdbfe;
+  --status-info-text: #93c5fd;
   --status-success-bg: #064e3b;
-  --status-success-text: #a7f3d0;
-  --status-warning-bg: #78350f;
-  --status-warning-text: #fde68a;
+  --status-success-text: #6ee7b7;
+  --status-warning-bg: #451a03;
+  --status-warning-text: #fbbf24;
 
   background-color: var(--slate-50);
   color: var(--slate-900);

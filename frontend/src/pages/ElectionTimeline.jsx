@@ -5,7 +5,27 @@ import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Calendar, MapPin, Users, CheckCircle2, Circle } from 'lucide-react';
 import Card from '../components/ui/Card';
+import Skeleton from '../components/ui/Skeleton';
 import API_URL from '../config/api';
+
+const TimelineSkeleton = () => (
+  <div className="max-w-6xl mx-auto py-16 px-4">
+    <Skeleton className="h-10 w-48 mb-12 rounded-full" />
+    <Skeleton className="h-16 w-3/4 mb-4" />
+    <Skeleton className="h-6 w-1/2 mb-16" />
+    <div className="grid lg:grid-cols-4 gap-16">
+      <div className="lg:col-span-3 space-y-12">
+        <Skeleton className="h-40 rounded-3xl" />
+        <Skeleton className="h-40 rounded-3xl" />
+        <Skeleton className="h-40 rounded-3xl" />
+      </div>
+      <div className="space-y-8">
+        <Skeleton className="h-64 rounded-2xl" />
+        <Skeleton className="h-64 rounded-2xl" />
+      </div>
+    </div>
+  </div>
+);
 
 const ElectionTimeline = () => {
   const { id } = useParams();
@@ -28,8 +48,16 @@ const ElectionTimeline = () => {
     fetchElection();
   }, [id]);
 
-  if (loading) return <div className="text-center p-20 animate-pulse text-slate-400">Loading timeline...</div>;
-  if (!election) return <div className="text-center p-20 text-red-500 font-bold">{t('no_election_data')}</div>;
+  if (loading) return <TimelineSkeleton />;
+  if (!election) return (
+    <div className="max-w-xl mx-auto py-32 px-4 text-center">
+        <div className="p-12 glass-card rounded-[3rem] border border-red-100">
+            <h2 className="text-2xl font-black text-red-600 mb-2">{t('no_election_data')}</h2>
+            <p className="text-slate-500 mb-6">We couldn't find details for this election event.</p>
+            <Button onClick={() => navigate('/dashboard')} variant="outline">Back to Dashboard</Button>
+        </div>
+    </div>
+  );
 
   const getLocalized = (field) => {
     if (!field) return '';
@@ -135,7 +163,7 @@ const ElectionTimeline = () => {
                 </h3>
                 <div className="space-y-4">
                     {election.candidates.map((cand, i) => (
-                        <div key={i} className="p-4 bg-slate-100/50 rounded-xl border border-slate-200">
+                        <div key={i} className="p-4 bg-surface rounded-xl border border-slate-100">
                             <span className="text-[10px] uppercase font-bold text-primary-500 block mb-1">{cand.party}</span>
                             <h4 className="font-bold text-slate-800 text-sm mb-2">{cand.name}</h4>
                             <div className="flex flex-wrap gap-1.5">
@@ -157,7 +185,7 @@ const ElectionTimeline = () => {
                 </h3>
                 <div className="space-y-4">
                     {election.pollingStations.slice(0, 2).map((station, i) => (
-                        <div key={i} className="p-4 bg-white border border-slate-100 rounded-xl shadow-sm">
+                        <div key={i} className="p-4 bg-surface border border-slate-100 rounded-xl shadow-sm">
                             <h4 className="font-bold text-slate-800 text-sm mb-1">{station.name}</h4>
                             <p className="text-slate-500 text-xs truncate mb-2">{station.address}</p>
                             <div className="flex flex-wrap gap-1 mb-3">
