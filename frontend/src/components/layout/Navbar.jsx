@@ -50,15 +50,15 @@ const Navbar = () => {
                 aria-label="Select Language"
                 className={`bg-transparent text-sm font-bold focus:outline-none cursor-pointer ${darkMode ? 'text-white' : 'text-slate-900'}`}
               >
-                <option value="en">English</option>
-                <option value="hi">हिंदी (Hindi)</option>
-                <option value="mr">मराठी (Marathi)</option>
-                <option value="gu">ગુજરાતી (Gujarati)</option>
-                <option value="bn">বাংলা (Bengali)</option>
-                <option value="ta">தமிழ் (Tamil)</option>
-                <option value="te">తెలుగు (Telugu)</option>
-                <option value="kn">ಕನ್ನಡ (Kannada)</option>
-                <option value="ml">മലയാളം (Malayalam)</option>
+                <option value="en" className={darkMode ? 'bg-slate-900 text-white' : 'bg-white text-slate-900'}>English</option>
+                <option value="hi" className={darkMode ? 'bg-slate-900 text-white' : 'bg-white text-slate-900'}>हिंदी (Hindi)</option>
+                <option value="mr" className={darkMode ? 'bg-slate-900 text-white' : 'bg-white text-slate-900'}>मराठी (Marathi)</option>
+                <option value="gu" className={darkMode ? 'bg-slate-900 text-white' : 'bg-white text-slate-900'}>ગુજરાતી (Gujarati)</option>
+                <option value="bn" className={darkMode ? 'bg-slate-900 text-white' : 'bg-white text-slate-900'}>বাংলা (Bengali)</option>
+                <option value="ta" className={darkMode ? 'bg-slate-900 text-white' : 'bg-white text-slate-900'}>தமிழ் (Tamil)</option>
+                <option value="te" className={darkMode ? 'bg-slate-900 text-white' : 'bg-white text-slate-900'}>తెలుగు (Telugu)</option>
+                <option value="kn" className={darkMode ? 'bg-slate-900 text-white' : 'bg-white text-slate-900'}>ಕನ್ನಡ (Kannada)</option>
+                <option value="ml" className={darkMode ? 'bg-slate-900 text-white' : 'bg-white text-slate-900'}>മലയാളം (Malayalam)</option>
               </select>
             </div>
 
@@ -143,16 +143,16 @@ const Navbar = () => {
                   aria-label="Select Language"
                   className="bg-transparent text-sm font-bold text-primary-600 focus:outline-none cursor-pointer"
                 >
-                  <option value="en">EN</option>
-                  <option value="hi">HI</option>
-                  <option value="mr">MR</option>
-                  <option value="gu">GU</option>
-                  <option value="bn">BN</option>
-                  <option value="ta">TA</option>
-                  <option value="te">TE</option>
-                  <option value="kn">KN</option>
-                  <option value="ml">ML</option>
-                </select>
+                <option value="en" className={darkMode ? 'bg-slate-900 text-white' : 'bg-white text-slate-900'}>EN</option>
+                <option value="hi" className={darkMode ? 'bg-slate-900 text-white' : 'bg-white text-slate-900'}>HI</option>
+                <option value="mr" className={darkMode ? 'bg-slate-900 text-white' : 'bg-white text-slate-900'}>MR</option>
+                <option value="gu" className={darkMode ? 'bg-slate-900 text-white' : 'bg-white text-slate-900'}>GU</option>
+                <option value="bn" className={darkMode ? 'bg-slate-900 text-white' : 'bg-white text-slate-900'}>BN</option>
+                <option value="ta" className={darkMode ? 'bg-slate-900 text-white' : 'bg-white text-slate-900'}>TA</option>
+                <option value="te" className={darkMode ? 'bg-slate-900 text-white' : 'bg-white text-slate-900'}>TE</option>
+                <option value="kn" className={darkMode ? 'bg-slate-900 text-white' : 'bg-white text-slate-900'}>KN</option>
+                <option value="ml" className={darkMode ? 'bg-slate-900 text-white' : 'bg-white text-slate-900'}>ML</option>
+              </select>
               </div>
 
               <div className="space-y-1">
